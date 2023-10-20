@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1077659098219",
+    "project_id": "iiitd-stamp",
+    "storage_bucket": "iiitd-stamp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077659098219:android:b03bcac6913491710c652e",
+        "android_client_info": {
+          "package_name": "com.example.iiitd_mentorship"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1077659098219-uiegruhf41mgsol9ufnvqp36mp7efc2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_4qdM4mSd6v4pTTz0fWLigkN73YmuZfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077659098219-uiegruhf41mgsol9ufnvqp36mp7efc2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
