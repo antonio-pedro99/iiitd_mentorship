@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/onboarding.dart';
 import 'package:iiitd_mentorship/app/views/screens/home.dart';
 
 class MyApp extends StatelessWidget {
@@ -21,6 +22,8 @@ class MyApp extends StatelessWidget {
             const MyHomePage(title: 'Settings'),
         '/notifications': (BuildContext context) =>
             const MyHomePage(title: 'Notifications'),
+        'onboarding': (BuildContext context) =>
+            const OnBoardsScreen(),
       },
     );
   }
