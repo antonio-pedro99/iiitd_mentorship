@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1077659098219',
     projectId: 'iiitd-stamp',
     storageBucket: 'iiitd-stamp.appspot.com',
-    iosClientId: '1077659098219-i14nr9otgut0t00hgnsed4kr1obf669c.apps.googleusercontent.com',
+    iosClientId:
+        '1077659098219-i14nr9otgut0t00hgnsed4kr1obf669c.apps.googleusercontent.com',
     iosBundleId: 'com.example.iiitdMentorship',
   );
 }

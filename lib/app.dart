@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/login.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/onboarding.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/signup.dart';
 import 'package:iiitd_mentorship/app/views/screens/home.dart';
 
 class MyApp extends StatelessWidget {
@@ -7,24 +11,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Stamp',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Stamp'),
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => const MyHomePage(title: 'Stamp'),
-        '/profile': (BuildContext context) =>
-            const MyHomePage(title: 'My Profile'),
-        '/settings': (BuildContext context) =>
-            const MyHomePage(title: 'Settings'),
-        '/notifications': (BuildContext context) =>
-            const MyHomePage(title: 'Notifications'),
-        'onboarding': (BuildContext context) =>
-            const OnBoardsScreen(),
-      },
-    );
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(),
+          )
+        ],
+        child: MaterialApp(
+          title: 'Stamp',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner: false,
+          home: const OnBoardsScreen(),
+          routes: <String, WidgetBuilder>{
+            '/home': (BuildContext context) => const MyHomePage(title: 'Stamp'),
+            '/profile': (BuildContext context) =>
+                const MyHomePage(title: 'My Profile'),
+            '/settings': (BuildContext context) =>
+                const MyHomePage(title: 'Settings'),
+            '/notifications': (BuildContext context) =>
+                const MyHomePage(title: 'Notifications'),
+            'onboarding': (BuildContext context) => const OnBoardsScreen(),
+            '/login': (BuildContext context) => const LoginScreen(),
+            '/signup': (BuildContext context) => const SignUpScreen(),
+          },
+        ));
   }
-} 
+}
