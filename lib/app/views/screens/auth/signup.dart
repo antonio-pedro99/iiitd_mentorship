@@ -113,15 +113,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        BlocProvider.of<AuthBloc>(context).add(
-                          AuthSignUp(
-                            user: UserAuthSignUp(
-                              name: "Antonio Pedro",
-                              email: mailController.text,
-                              password: passwordController.text,
-                            ),
-                          )
-                        );
+                        BlocProvider.of<AuthBloc>(context).add(AuthSignUp(
+                          user: UserAuthSignUp(
+                            name: "Antonio Pedro",
+                            email: mailController.text,
+                            password: passwordController.text,
+                          ),
+                        ));
                       }
                     },
                     child: const Text('Sign Up'),
