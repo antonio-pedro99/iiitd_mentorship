@@ -7,7 +7,7 @@ import 'package:iiitd_mentorship/app/views/screens/auth/onboarding.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/signup.dart';
 import 'package:iiitd_mentorship/app/views/screens/driver.dart';
 import 'package:iiitd_mentorship/app/views/screens/home/home.dart';
-import 'package:iiitd_mentorship/app/views/screens/schedule/schedules.dart';
+import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
             '/driver': (BuildContext context) => const DriverPage(),
             '/home': (BuildContext context) => const MyHomePage(title: 'Stamp'),
             '/home/schedule': (context) =>
-                const MySchedulesScreen(title: "Schedule"),
+                const CalendarScreen(title: "Schedule"),
             '/profile': (BuildContext context) =>
                 const MyHomePage(title: 'My Profile'),
             '/settings': (BuildContext context) =>
