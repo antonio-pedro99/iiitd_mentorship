@@ -61,7 +61,7 @@ class FirebaseService {
       firebaseResponse.status = true;
       firebaseResponse.message = 'User signed up successfully';
       firebaseResponse.statusCode = 200;
-
+      print(firebaseResponse.data);
       return firebaseResponse;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {

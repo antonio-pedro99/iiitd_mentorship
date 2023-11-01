@@ -24,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           final user = (event as AuthSignUp).user;
           final response = await _auth.signup(user);
 
-          //emit(_validateResponse(response));
+          emit(_validateResponse(response));
           break;
         case AuthLogout:
           final response = await _auth.signout();

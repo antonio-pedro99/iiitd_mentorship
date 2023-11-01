@@ -12,7 +12,7 @@ final class AuthLogin extends AuthEvent {
 final class AuthSignUp extends AuthEvent {
   final UserAuthSignUp user;
 
-  AuthSignUp(this.user);
+  AuthSignUp({required this.user});
 }
 
 final class AuthLogout extends AuthEvent {}

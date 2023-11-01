@@ -22,8 +22,8 @@ final class UserAuthLogin extends UserAuth {
 final class UserAuthSignUp extends UserAuth {
   final String name;
 
-  UserAuthSignUp(String email, String password, this.name)
-      : super(email, password);
+  UserAuthSignUp({String? email, String? password, required this.name})
+      : super(email!, password!);
 
   UserAuthSignUp.fromJson(Map<String, dynamic> json)
       : name = json['name'],
