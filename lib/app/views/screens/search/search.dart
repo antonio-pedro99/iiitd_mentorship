@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.title});
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

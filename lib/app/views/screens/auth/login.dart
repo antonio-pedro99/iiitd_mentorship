@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
               case Authenticated:
                 Navigator.pop(context);
                 Navigator.pushNamedAndRemoveUntil(
-                    context, "/home", (route) => false);
+                    context, "/driver", (route) => false);
                 break;
               case UnAuthenticated:
                 Navigator.pop(context);
