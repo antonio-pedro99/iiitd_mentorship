@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // Import the image_picker package
+import 'dart:io';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +16,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   final _formKey = GlobalKey<FormState>(); // Add a key for the form
+  XFile? _profileImage; // XFile for picked image
+  final ImagePicker _picker = ImagePicker(); // Instantiate it
 
   @override
   void initState() {
@@ -53,6 +58,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _pickImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _profileImage = pickedFile;
+        });
+      }
+    } catch (e) {
+      // Handle any errors
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +95,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 70, // Increased radius for a larger profile picture
-                    backgroundImage: AssetImage('assets/profile_image.png'),
+                    backgroundImage: _profileImage != null
+                        ? FileImage(File(_profileImage!.path)) as ImageProvider<Object> // Display the picked image
+                        : AssetImage('assets/profile_image.png') as ImageProvider<Object>,
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -86,9 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     child: IconButton(
                       icon: Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {
-                        // Placeholder for functionality to change profile picture
-                      },
+                      onPressed: _pickImage, // Call the image picking function
                     ),
                   ),
                 ],
@@ -137,6 +155,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                   return null;
                 },
+              ),
+              SizedBox(height: 24), // Keep consistent spacing between the fields
+              TextFormField(
+                initialValue: 'Mentee', // Set the initial value to 'Mentee'
+                decoration: InputDecoration(
+                  labelText: 'Role',
+                ),
+                readOnly: true, // Make it read-only
+                style: TextStyle(fontSize: 20), // Keep the font size consistent
               ),
             ],
           ),
