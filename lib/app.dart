@@ -12,7 +12,6 @@ import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
 =======
 import 'package:iiitd_mentorship/app/views/screens/home.dart';
 import 'package:iiitd_mentorship/app/views/screens/profile/profile.dart';
->>>>>>> af2edf7 (View and Edit profile)
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -50,8 +49,6 @@ class MyApp extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             '/driver': (BuildContext context) => const DriverPage(),
             '/home': (BuildContext context) => const MyHomePage(title: 'Stamp'),
-            '/home/schedule': (context) =>
-                const CalendarScreen(title: "Schedule"),
             '/profile': (BuildContext context) =>
                 const ProfileScreen(),
             '/settings': (BuildContext context) =>

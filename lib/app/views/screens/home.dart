@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iiitd_mentorship/app/views/widgets/circle_button.dart';
-import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
-import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
