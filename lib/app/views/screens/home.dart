@@ -14,9 +14,28 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
+          title: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Welcome"),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                "Find IIITD Mentors around the world",
+                style: TextStyle(fontSize: 12),
+              )
+            ],
+          ),
+          toolbarHeight: kToolbarHeight + 10,
+          actions: [
+            IconButton(
+                onPressed: () => Navigator.pushNamed(context, "/profile"),
+                icon: const Icon(Icons.person)),
+          ],
         ),
-        body: const Center());
+        body: const Column(
+          children: [],
+        ));
   }
 }
