@@ -6,6 +6,7 @@ import 'package:iiitd_mentorship/app/views/screens/auth/login.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/onboarding.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/signup.dart';
 import 'package:iiitd_mentorship/app/views/screens/chat/chat.dart';
+import 'package:iiitd_mentorship/app/views/screens/chat/my_chat.dart';
 import 'package:iiitd_mentorship/app/views/screens/driver.dart';
 import 'package:iiitd_mentorship/app/views/screens/home/home.dart';
 import 'package:iiitd_mentorship/app/views/screens/profile/profile.dart';
@@ -57,6 +58,8 @@ class MyApp extends StatelessWidget {
             '/signup': (BuildContext context) => const SignUpScreen(),
             '/chat': (BuildContext context) =>
                 const ChatScreen(title: "Welcome to Chat"),
+            '/chat/mychat' : (BuildContext context) =>
+            const MyChats(title: "MyFriend"),
             '/home/schedule': (BuildContext context) =>
                 const MySchedulesScreen(title: 'Schedule'),
           },

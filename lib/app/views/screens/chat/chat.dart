@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iiitd_mentorship/app/views/screens/chat/my_chat.dart';
+import 'package:iiitd_mentorship/app/views/widgets/conversation_tile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
+import 'package:iiitd_mentorship/app/views/widgets/rounded_photo.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.title});
@@ -13,75 +16,83 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
-  final List<String> _messages = [];
+  final List<String> _connections = [];
 
-  void _handleSubmittedMessage(String text) {
-    setState(() {
-      _messages.insert(0, text); // Add the message to the list
-      _textController.clear(); // Clear the text input field
-    });
+  // void _handleSubmittedMessage(String text) {
+  //   setState(() {
+  //     _connections.insert(0, text); // Add the message to the list
+  //     _textController.clear(); // Clear the text input field
+  //   });
+  // }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _connections.insert(0,"Connection2");
+    _connections.insert(0,"Connection1");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .inversePrimary,
         title: Text(widget.title),
       ),
       body: Column(
         children: <Widget>[
           Flexible(
             child: ListView.builder(
-              reverse: true, // Start from the bottom of the list
-              itemCount: _messages.length,
+              reverse: false, // Start from the bottom of the list
+              itemCount: _connections.length,
               itemBuilder: (context, index) {
-                return (index % 2 == 1) ? MessageTile(
-                  isMe:true,
-                  message: _messages[index],
-                  time: "12:00",
-                  
-                ): MessageTile(
-                  isMe:false,
-                  message: _messages[index],
-                  time: "12:00",
-                );
+                return IconButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, "/chat/mychat"),
+                    icon: ConversationTile(
+                      connectionName: _connections[index],));
               },
             ),
-          ),
-          Divider(height: 1.0),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-            ),
-            child: _buildTextComposer(),
           ),
         ],
       ),
     );
-  }
 
-  Widget _buildTextComposer() {
-    return IconTheme(
-      data: IconThemeData(color: Colors.blue),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: <Widget>[
-            Flexible(
-              child: CustomTextBox(
-                controller: _textController,
-                hintText: 'Type a message',
-                
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.send),
-              onPressed: () => _handleSubmittedMessage(_textController.text),
-            ),
-          ],
-        ),
-      ),
-    );
+    // return MaterialApp(
+    //     routes: <String, WidgetBuilder>{
+    //       '/Connection1': (BuildContext context) => const MyChats(title: "Connection1"),
+    //       '/Connection2': (BuildContext context) => const MyChats(title: "Connection2"),
+    //     },
+    //     home: Scaffold(
+    //       appBar: AppBar(
+    //         backgroundColor: Theme
+    //             .of(context)
+    //             .colorScheme
+    //             .inversePrimary,
+    //         title: Text(widget.title),
+    //       ),
+    //       body: Column(
+    //         children: <Widget>[
+    //           Flexible(
+    //             child: ListView.builder(
+    //               reverse: false, // Start from the bottom of the list
+    //               itemCount: _connections.length,
+    //               itemBuilder: (context, index) {
+    //                 return IconButton(
+    //                     onPressed: () =>
+    //                         Navigator.pushNamed(context, "/Connection1"),
+    //                     icon: ConversationTile(
+    //                       connectionName: _connections[index],));
+    //               },
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     )
+    // );
   }
 }
