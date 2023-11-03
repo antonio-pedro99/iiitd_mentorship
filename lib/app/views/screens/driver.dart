@@ -37,7 +37,7 @@ class _DriverPageState extends State<DriverPage> {
           MyHomePage(title: 'Stamp'),
           SearchScreen(title: "Search"),
           ChatScreen(title: "Chat"),
-          MyProfileScreen(title: "Profile")
+          ProfileScreen()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
