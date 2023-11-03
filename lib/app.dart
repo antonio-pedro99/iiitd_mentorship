@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,12 +7,9 @@ import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/login.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/onboarding.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/signup.dart';
-<<<<<<< HEAD
+import 'package:iiitd_mentorship/app/views/screens/chat/chat.dart';
 import 'package:iiitd_mentorship/app/views/screens/driver.dart';
 import 'package:iiitd_mentorship/app/views/screens/home/home.dart';
-import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
-=======
-import 'package:iiitd_mentorship/app/views/screens/home.dart';
 import 'package:iiitd_mentorship/app/views/screens/profile/profile.dart';
 
 class MyApp extends StatelessWidget {
@@ -58,6 +57,7 @@ class MyApp extends StatelessWidget {
             'onboarding': (BuildContext context) => const OnBoardsScreen(),
             '/login': (BuildContext context) => const LoginScreen(),
             '/signup': (BuildContext context) => const SignUpScreen(),
+            '/chat' : (BuildContext context) => const ChatScreen(title: "Welcome to Chat"),
           },
         ));
   }
