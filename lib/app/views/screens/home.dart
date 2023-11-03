@@ -30,8 +30,8 @@ class _MyHomePageState extends State<MyHomePage> {
           toolbarHeight: kToolbarHeight + 10,
           actions: [
             IconButton(
-                onPressed: () => Navigator.pushNamed(context, "/profile"),
-                icon: const Icon(Icons.person)),
+                onPressed: () => Navigator.pushNamed(context, "/home/schedule"),
+                icon: const Icon(Icons.today_outlined)),
           ],
         ),
         body: const Column(

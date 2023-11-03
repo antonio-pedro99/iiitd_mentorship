@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
+import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.title});
@@ -34,14 +36,15 @@ class _ChatScreenState extends State<ChatScreen> {
               reverse: true, // Start from the bottom of the list
               itemCount: _messages.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Container(
-                    color: Colors.lightBlue,
-                    child: Text(
-                      _messages[index],
-                      textAlign: TextAlign.right,
-                    ),
-                  )
+                return (index % 2 == 1) ? MessageTile(
+                  isMe:true,
+                  message: _messages[index],
+                  time: "12:00",
+                  
+                ): MessageTile(
+                  isMe:false,
+                  message: _messages[index],
+                  time: "12:00",
                 );
               },
             ),
@@ -66,11 +69,10 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Row(
           children: <Widget>[
             Flexible(
-              child: TextField(
+              child: CustomTextBox(
                 controller: _textController,
-                onSubmitted: _handleSubmittedMessage,
-                decoration:
-                    InputDecoration.collapsed(hintText: 'Send a message'),
+                hintText: 'Type a message',
+                
               ),
             ),
             IconButton(

@@ -81,7 +81,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white, // A white background to ensure visibility
+                      color: Colors
+                          .white, // A white background to ensure visibility
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(

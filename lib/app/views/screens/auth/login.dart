@@ -138,17 +138,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-// added this
-                    TextButton(
-                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                          context, "/chat", (route) => false),
-                      child: const Text(
-                        'Chat',
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ],

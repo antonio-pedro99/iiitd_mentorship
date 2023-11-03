@@ -6,18 +6,22 @@ class CustomTextBox extends StatelessWidget {
       this.controller,
       this.hintText,
       this.suffixIcon,
-      this.prefixIcon});
+      this.prefixIcon,
+      this.onSubmitted
+      });
 
   final TextEditingController? controller;
   final String? hintText;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
+  final Function(String)? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
       widthFactor: 0.8,
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: hintText ?? "Enter text",
           contentPadding: const EdgeInsets.all(16),

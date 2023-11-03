@@ -6,14 +6,14 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'create.dart';
 
-class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key, required this.title});
+class MySchedulesScreen extends StatefulWidget {
+  const MySchedulesScreen({super.key, required this.title});
   final String title;
   @override
-  _CalendarScreenState createState() => _CalendarScreenState();
+  _MySchedulesScreenState createState() => _MySchedulesScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> {
+class _MySchedulesScreenState extends State<MySchedulesScreen> {
   List<Meeting> meetings = <Meeting>[];
 
   @override
@@ -33,7 +33,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleMeetingScreen()));
+          await Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ScheduleMeetingScreen()));
           setState(() {
             meetings = _getDataSource();
           });
@@ -47,7 +48,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return MeetingData.meetings;
   }
 }
-
 
 class Meeting {
   Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
 
 class ScheduleMeetingScreen extends StatefulWidget {
+  const ScheduleMeetingScreen({super.key});
+
   @override
   _ScheduleMeetingScreenState createState() => _ScheduleMeetingScreenState();
 }
@@ -43,19 +45,25 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
             SizedBox(height: 16),
             ListTile(
               title: Text('Date'),
-              subtitle: Text(_selectedDate == null ? 'Select Date' : _selectedDate.toLocal().toString().split(' ')[0]),
+              subtitle: Text(_selectedDate == null
+                  ? 'Select Date'
+                  : _selectedDate.toLocal().toString().split(' ')[0]),
               trailing: Icon(Icons.calendar_today),
               onTap: _pickDate,
             ),
             ListTile(
               title: Text('Start Time'),
-              subtitle: Text(_startTime == null ? 'Select Start Time' : _startTime.format(context)),
+              subtitle: Text(_startTime == null
+                  ? 'Select Start Time'
+                  : _startTime.format(context)),
               trailing: Icon(Icons.access_time),
               onTap: _pickStartTime,
             ),
             ListTile(
               title: Text('End Time'),
-              subtitle: Text(_endTime == null ? 'Select End Time' : _endTime.format(context)),
+              subtitle: Text(_endTime == null
+                  ? 'Select End Time'
+                  : _endTime.format(context)),
               trailing: Icon(Icons.access_time),
               onTap: _pickEndTime,
             ),
@@ -117,8 +125,10 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
       MeetingData.addMeeting(
         Meeting(
           _titleController.text,
-          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, _startTime.hour, _startTime.minute),
-          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, _endTime.hour, _endTime.minute),
+          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
+              _startTime.hour, _startTime.minute),
+          DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
+              _endTime.hour, _endTime.minute),
           Colors.blue,
           false,
         ),
