@@ -36,8 +36,8 @@ class _DriverPageState extends State<DriverPage> {
         children: const [
           MyHomePage(title: 'Stamp'),
           SearchScreen(title: "Search"),
-          ChatScreen(title: "Chat"),
-          MyProfileScreen(title: "Profile")
+          ChatScreen(title: "Chats"),
+          ProfileScreen()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

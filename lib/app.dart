@@ -5,9 +5,12 @@ import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/login.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/onboarding.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/signup.dart';
+import 'package:iiitd_mentorship/app/views/screens/chat/chat.dart';
+import 'package:iiitd_mentorship/app/views/screens/chat/my_chat.dart';
 import 'package:iiitd_mentorship/app/views/screens/driver.dart';
 import 'package:iiitd_mentorship/app/views/screens/home/home.dart';
-import 'package:iiitd_mentorship/app/views/screens/schedule/schedules.dart';
+import 'package:iiitd_mentorship/app/views/screens/profile/profile.dart';
+import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -45,10 +48,7 @@ class MyApp extends StatelessWidget {
           routes: <String, WidgetBuilder>{
             '/driver': (BuildContext context) => const DriverPage(),
             '/home': (BuildContext context) => const MyHomePage(title: 'Stamp'),
-            '/home/schedule': (context) =>
-                const MySchedulesScreen(title: "Schedule"),
-            '/profile': (BuildContext context) =>
-                const MyHomePage(title: 'My Profile'),
+            '/profile': (BuildContext context) => const ProfileScreen(),
             '/settings': (BuildContext context) =>
                 const MyHomePage(title: 'Settings'),
             '/notifications': (BuildContext context) =>
@@ -56,6 +56,12 @@ class MyApp extends StatelessWidget {
             'onboarding': (BuildContext context) => const OnBoardsScreen(),
             '/login': (BuildContext context) => const LoginScreen(),
             '/signup': (BuildContext context) => const SignUpScreen(),
+            '/chat': (BuildContext context) =>
+                const ChatScreen(title: "Welcome to Chat"),
+            '/chat/mychat' : (BuildContext context) =>
+            const MyChats(title: "MyFriend"),
+            '/home/schedule': (BuildContext context) =>
+                const MySchedulesScreen(title: 'Schedule'),
           },
         ));
   }

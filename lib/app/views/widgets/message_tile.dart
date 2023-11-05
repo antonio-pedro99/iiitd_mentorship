@@ -7,7 +7,7 @@ class MessageTile extends StatelessWidget {
       this.message,
       this.time,
       this.isRead,
-      this.containsImage});
+      this.containsImage = false});
 
   final bool? isMe;
   final String? message;
