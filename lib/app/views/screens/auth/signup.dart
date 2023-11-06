@@ -11,13 +11,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final mailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final nameController = TextEditingController();
-    final mailController = TextEditingController();
-    final passwordController = TextEditingController();
-
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -34,9 +33,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 );
                 break;
               case Authenticated:
-                Navigator.pop(context);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "/home", (route) => false);
+                SnackBar(
+                  content: Text((state as Authenticated).response.message!),
+                );
                 break;
               case UnAuthenticated:
                 Navigator.pop(context);

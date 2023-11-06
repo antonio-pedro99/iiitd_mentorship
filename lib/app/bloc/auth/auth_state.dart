@@ -6,9 +6,9 @@ sealed class AuthState {}
 final class AuthInitial extends AuthState {}
 
 final class Authenticated extends AuthState {
-  final Object user;
+  final FirebaseResponse response;
 
-  Authenticated(this.user);
+  Authenticated(this.response);
 }
 
 final class UnAuthenticated extends AuthState {

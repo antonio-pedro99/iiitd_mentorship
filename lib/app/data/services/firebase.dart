@@ -53,15 +53,15 @@ class FirebaseService {
   Future<FirebaseResponse> signUp(UserAuthSignUp user) async {
     var firebaseResponse = FirebaseResponse(status: false);
     try {
-      var response = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: user.email, password: user.password);
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: user.email, password: user.password)
+          .then((value) {
+        print("User Created");
+      }).catchError((error) {
+        print("Failed to create user: $error");
+      });
 
-      await response.user!.updateDisplayName(user.name);
-      firebaseResponse.data = response;
-      firebaseResponse.status = true;
-      firebaseResponse.message = 'User signed up successfully';
-      firebaseResponse.statusCode = 200;
-      print(firebaseResponse.data);
       return firebaseResponse;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
