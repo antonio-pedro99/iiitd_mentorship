@@ -21,12 +21,13 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
         minWidth: width ?? MediaQuery.of(context).size.width,
-        height: height ?? 50,
+        height: height ?? 56,
         color: color ?? Theme.of(context).primaryColor,
+        textColor: color == Colors.white ? Colors.black : Colors.white,
         padding: const EdgeInsets.all(16),
         shape: rounded == true
             ? RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(18),
               )
             : null,
         onPressed: onPressed,

@@ -11,6 +11,7 @@ import 'package:iiitd_mentorship/app/views/screens/driver.dart';
 import 'package:iiitd_mentorship/app/views/screens/home/home.dart';
 import 'package:iiitd_mentorship/app/views/screens/profile/profile.dart';
 import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
+import 'package:iiitd_mentorship/theme.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,24 +26,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Stamp',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            primaryColor: Colors.deepPurple,
-            primarySwatch: Colors.deepPurple,
-            useMaterial3: true,
-            scaffoldBackgroundColor: Colors.white,
-            bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-              backgroundColor: Colors.white,
-            ),
-            appBarTheme: AppBarTheme.of(context).copyWith(
-              backgroundColor: Colors.white,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.white,
-                statusBarIconBrightness: Brightness.dark,
-                systemNavigationBarColor: Colors.white,
-              ),
-            ),
-          ),
+          theme: AppTheme.lightTheme(context),
           debugShowCheckedModeBanner: false,
           home: const OnBoardsScreen(),
           routes: <String, WidgetBuilder>{

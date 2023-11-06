@@ -19,7 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
         SliverAppBar(
           floating: true,
           snap: true,
-          title: Column(
+          title: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Welcome"),
