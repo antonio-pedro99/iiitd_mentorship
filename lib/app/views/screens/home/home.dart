@@ -19,7 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
         SliverAppBar(
           floating: true,
           snap: true,
-          title: const Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Welcome"),
@@ -36,7 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: [
             IconButton(
                 onPressed: () => Navigator.pushNamed(context, "/home/schedule"),
-                icon: const Icon(Icons.event)),
+                icon: const Icon(
+                  Icons.event,
+                  color: Colors.grey,
+                )),
           ],
         ),
         SliverPadding(
@@ -49,7 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      Text("My Sessions"),
+                      Text("My Sessions",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                       SizedBox(
                         height: 10,
                       ),
@@ -58,20 +63,41 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Column(
                             children: [
-                              Text("Upcoming"),
-                              Text("0"),
+                              Text("Upcoming",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500)),
+                              Text("0",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                           Column(
                             children: [
-                              Text("Completed"),
-                              Text("0"),
+                              Text("Completed",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500)),
+                              Text("0",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                           Column(
                             children: [
-                              Text("Cancelled"),
-                              Text("0"),
+                              Text("Cancelled",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500)),
+                              Text("0",
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
@@ -87,7 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Recommended Mentors"),
+                  Text("Recommended Mentors",
+                      style: TextStyle(fontWeight: FontWeight.w500)),
                   TextButton(
                     onPressed: null,
                     child: Text("See All"),
@@ -100,8 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 5,
                   itemBuilder: (context, index) {
-                    return Card(
-                        child: SizedBox(
+                    return SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: const MentorTile(
                           name: "Mentors name",
@@ -109,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           stars: 2,
                           photoUrl:
                               "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&q=80&w=1587&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-                    ));
+                    );
                   },
                 ),
               ),
@@ -119,24 +145,26 @@ class _MyHomePageState extends State<MyHomePage> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Topics"),
+                  Text("Topics of Interest",
+                      style: TextStyle(fontWeight: FontWeight.w500)),
                   TextButton(
                     onPressed: null,
                     child: Text("See All"),
                   )
                 ],
               ),
-
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
-                child: ListView.builder(itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text("Topic $index"),
-                      subtitle: const Text("Description"),
-                    ),
-                  );
-                }),
+                child: ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ListTile(
+                          title: Text("Topic $index"),
+                          subtitle: const Text("Description"),
+                        ),
+                      );
+                    }),
               )
             ]),
           ),

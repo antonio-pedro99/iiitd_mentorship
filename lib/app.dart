@@ -58,8 +58,8 @@ class MyApp extends StatelessWidget {
             '/signup': (BuildContext context) => const SignUpScreen(),
             '/chat': (BuildContext context) =>
                 const ChatScreen(title: "Welcome to Chat"),
-            '/chat/mychat' : (BuildContext context) =>
-            const MyChats(title: "MyFriend"),
+            '/chat/mychat': (BuildContext context) =>
+                const MyChats(title: "MyFriend"),
             '/home/schedule': (BuildContext context) =>
                 const MySchedulesScreen(title: 'Schedule'),
           },
