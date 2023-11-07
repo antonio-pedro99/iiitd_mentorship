@@ -10,7 +10,7 @@ class CustomTextBox extends StatelessWidget {
       this.obscureText,
       this.borderColor,
       this.backgroundColor,
-      required this.validationMessage,
+      this.validationMessage,
       this.textColor,
       this.onSubmitted});
 
@@ -22,7 +22,7 @@ class CustomTextBox extends StatelessWidget {
   final Color? borderColor;
   final Color? textColor;
   final Color? backgroundColor;
-  final String validationMessage;
+  final String? validationMessage;
   final Function(String)? onSubmitted;
 
   @override
@@ -37,6 +37,7 @@ class CustomTextBox extends StatelessWidget {
           }
           return null;
         },
+        onFieldSubmitted: onSubmitted,
         style: TextStyle(
           color: textColor ?? Colors.black,
         ),

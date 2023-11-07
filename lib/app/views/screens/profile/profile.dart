@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // Import the image_picker package
 import 'dart:io';
 
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -96,16 +95,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     radius: 70, // Increased radius for a larger profile picture
                     backgroundImage: _profileImage != null
-                        ? FileImage(File(_profileImage!.path)) as ImageProvider<Object> // Display the picked image
-                        : AssetImage('assets/profile_image.png') as ImageProvider<Object>,
+                        ? FileImage(File(_profileImage!.path))
+                            as ImageProvider<Object> // Display the picked image
+                        : AssetImage('assets/profile_image.png')
+                            as ImageProvider<Object>,
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white, // A white background to ensure visibility
+                      color: Colors
+                          .white, // A white background to ensure visibility
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.edit, color: Colors.blue),
+                      icon: Icon(Icons.edit,
+                          color: Theme.of(context).primaryColor),
                       onPressed: _pickImage, // Call the image picking function
                     ),
                   ),
@@ -156,7 +159,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 24), // Keep consistent spacing between the fields
+              SizedBox(
+                  height: 24), // Keep consistent spacing between the fields
               TextFormField(
                 initialValue: 'Mentee', // Set the initial value to 'Mentee'
                 decoration: InputDecoration(

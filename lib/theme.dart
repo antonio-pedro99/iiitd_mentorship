@@ -8,18 +8,21 @@ class AppTheme {
       scaffoldBackgroundColor: Colors.white,
       fontFamily: "Muli",
       primaryColor: kPrimaryColor,
-      useMaterial3: true,
+      primarySwatch: kPrimaryColor.material,
+      //  useMaterial3: true,
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
       ),
       appBarTheme: AppBarTheme.of(context).copyWith(
-        backgroundColor: Colors.white,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Colors.white,
-        ),
-      ),
+          elevation: 0,
+          backgroundColor: Colors.white,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.white,
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarColor: Colors.white,
+          ),
+          iconTheme: const IconThemeData(color: Colors.black),
+          titleTextStyle: const TextStyle(color: Colors.black)),
       textTheme: const TextTheme(
         bodyLarge: TextStyle(color: kTextColor),
         bodyMedium: TextStyle(color: kTextColor),

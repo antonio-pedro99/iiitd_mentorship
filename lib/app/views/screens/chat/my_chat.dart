@@ -70,7 +70,7 @@ class _MyChatsState extends State<MyChats> {
 
   Widget _buildTextComposer() {
     return IconTheme(
-      data: IconThemeData(color: Colors.blue),
+      data: IconThemeData(color: Theme.of(context).primaryColor),
       child: Row(
         children: <Widget>[
           Flexible(

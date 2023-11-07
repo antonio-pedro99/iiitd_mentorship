@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/login.dart';
@@ -31,12 +30,10 @@ class MyApp extends StatelessWidget {
           home: const OnBoardsScreen(),
           routes: <String, WidgetBuilder>{
             '/driver': (BuildContext context) => const DriverPage(),
-            '/home': (BuildContext context) => const MyHomePage(title: 'Stamp'),
+            '/home': (BuildContext context) => const MyHomePage(),
             '/profile': (BuildContext context) => const ProfileScreen(),
-            '/settings': (BuildContext context) =>
-                const MyHomePage(title: 'Settings'),
-            '/notifications': (BuildContext context) =>
-                const MyHomePage(title: 'Notifications'),
+            '/settings': (BuildContext context) => const MyHomePage(),
+            '/notifications': (BuildContext context) => const MyHomePage(),
             'onboarding': (BuildContext context) => const OnBoardsScreen(),
             '/login': (BuildContext context) => const LoginScreen(),
             '/signup': (BuildContext context) => const SignUpScreen(),

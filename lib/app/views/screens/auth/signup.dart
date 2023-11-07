@@ -17,14 +17,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool readterms = false;
   bool readpolicy = false;
 
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final mailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final nameController = TextEditingController();
-    final mailController = TextEditingController();
-    final passwordController = TextEditingController();
-
     return Scaffold(
+      appBar: AppBar(),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(18),
