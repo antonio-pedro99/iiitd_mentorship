@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/mentor.dart';
 
-class MentorTile extends StatelessWidget {
-  const MentorTile({super.key, required this.mentor});
+class MentorResultTile extends StatelessWidget {
+  const MentorResultTile({super.key, required this.mentor});
 
   final Mentor mentor;
 
@@ -13,6 +13,7 @@ class MentorTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
               height: 80.0,
@@ -47,11 +48,37 @@ class MentorTile extends StatelessWidget {
                         fontSize: 11.0,
                         color: Colors.grey,
                       )),
-                  const SizedBox(height: 5),
                   Row(
-                    children: <Widget>[
-                      const Icon(Icons.star, color: Colors.yellow),
-                      Text(mentor.stars.toString()),
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          const Icon(Icons.star, color: Colors.yellow),
+                          Text(mentor.stars.toString()),
+                        ],
+                      ),
+                      const SizedBox(width: 10),
+                      const Row(
+                        children: [
+                          Text("Available for"),
+                          Icon(
+                            Icons.video_call,
+                            color: Colors.green,
+                            size: 18,
+                          ),
+                          Icon(
+                            Icons.chat,
+                            color: Colors.green,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.favorite_border,
+                            size: 18,
+                          ))
                     ],
                   ),
                 ],

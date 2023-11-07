@@ -29,7 +29,9 @@ class _MyChatsState extends State<MyChats> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const ConversationTile(showDetails: false,), //Text(widget.title),
+        title: const ConversationTile(
+          showDetails: false,
+        ), //Text(widget.title),
       ),
       body: Column(
         children: <Widget>[
@@ -40,16 +42,16 @@ class _MyChatsState extends State<MyChats> {
               itemBuilder: (context, index) {
                 return ((_messages.length - index) % 2 == 1)
                     ? MessageTile(
-                  isMe: true,
-                  message: _messages[index],
-                  time: "12:00",
-                  isRead: true,
-                )
+                        isMe: true,
+                        message: _messages[index],
+                        time: "12:00",
+                        isRead: true,
+                      )
                     : MessageTile(
-                  isMe: false,
-                  message: _messages[index],
-                  time: "12:00",
-                );
+                        isMe: false,
+                        message: _messages[index],
+                        time: "12:00",
+                      );
               },
             ),
           ),
@@ -68,11 +70,12 @@ class _MyChatsState extends State<MyChats> {
 
   Widget _buildTextComposer() {
     return IconTheme(
-      data: IconThemeData(color: Colors.blue),
+      data: IconThemeData(color: Theme.of(context).primaryColor),
       child: Row(
         children: <Widget>[
           Flexible(
             child: CustomTextBox(
+              validationMessage: "Please enter some text",
               controller: _textController,
               hintText: 'Type a message',
             ),

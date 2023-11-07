@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 
 class OnBoardsScreen extends StatelessWidget {
   const OnBoardsScreen({super.key});
@@ -6,112 +7,106 @@ class OnBoardsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(backgroundColor: Colors.white, elevation: 0, actions: [
-          TextButton(
-            onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                context, "/login", (route) => false),
-            child: const Text(
-              'Login',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-            ),
-          ),
-        ]),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
         body: Padding(
             padding: const EdgeInsets.all(18),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Expanded(
-                child: PageView.builder(
-                  itemCount: _OnBoardMessage.messages().length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Expanded(
-                          child: Image.asset(
-                            _OnBoardMessage.messages()[index].image,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Text(
-                          _OnBoardMessage.messages()[index].title,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          _OnBoardMessage.messages()[index].message,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Don\'t have an account?',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
+            child: Column(
+              children: [
+                SizedBox(
+                  child: Image.asset(
+                    "assets/on_1.png",
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    fit: BoxFit.contain,
                   ),
-                  TextButton(
-                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                        context, "/signup", (route) => false),
-                    child: const Text(
-                      'SignUp',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.blue,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const Text(
+                  'Welcome to the app',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Stuck with a problem? Need a mentor? We got you covered. Find a mentor from IIITD to help you out.',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w200),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButton(
+                    rounded: true,
+                    onPressed: () => Navigator.pushNamed(context, "/signup"),
+                    child: const Text("Create account")),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomButton(
+                    rounded: true,
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/login");
+                    },
+                    child: const Text("Login")),
+                const SizedBox(height: 10),
+                const Center(child: Text("Or connect with")),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MaterialButton(
+                      onPressed: () {},
+                      color: Colors.white,
+                      minWidth: 100,
+                      textColor: Colors.black,
+                      padding: const EdgeInsets.all(16),
+                      shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide:
+                              const BorderSide(color: Colors.grey, width: .2)),
+                      child: Image.asset(
+                        "assets/google.png",
+                        height: 24,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ])));
-  }
-}
-
-class _OnBoardMessage {
-  final String title;
-  final String message;
-  final String image;
-
-  const _OnBoardMessage(
-      {required this.title, required this.message, required this.image});
-
-  static List<_OnBoardMessage> messages() {
-    return const [
-      _OnBoardMessage(
-          title: 'Welcome to the app',
-          message: 'This is a message',
-          image: 'assets/on_1.png'),
-      _OnBoardMessage(
-          title: 'Welcome to the app',
-          message: 'This is a message',
-          image: 'assets/on_2.png'),
-      _OnBoardMessage(
-          title: 'Welcome to the app',
-          message: 'This is a message',
-          image: 'assets/on_3.png'),
-    ];
+                    const SizedBox(width: 10),
+                    const SizedBox(width: 10),
+                    MaterialButton(
+                        onPressed: () {},
+                        minWidth: 100,
+                        color: Colors.white,
+                        textColor: Colors.black,
+                        padding: const EdgeInsets.all(16),
+                        shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            borderSide: const BorderSide(
+                                color: Colors.grey, width: .2)),
+                        child: const Icon(
+                          Icons.phone,
+                          size: 24,
+                        )),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                    'By continuing you agree to our Terms of Service and Privacy Policy',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ))
+              ],
+            )));
   }
 }

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:iiitd_mentorship/app/data/model/mentor.dart';
 import 'package:iiitd_mentorship/app/views/widgets/mentor_tile.dart';
+import 'package:iiitd_mentorship/app/views/widgets/session_action.dart';
+import 'package:iiitd_mentorship/app/views/widgets/topic_tile.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final List<Mentor> mentors = Mentor.getMentors();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,13 +25,16 @@ class _MyHomePageState extends State<MyHomePage> {
           title: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Welcome"),
+              Text(
+                "Welcome",
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+              ),
               SizedBox(
                 height: 5,
               ),
               Text(
                 "Find IIITD Mentors around the world",
-                style: TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 14),
               )
             ],
           ),
@@ -36,61 +42,42 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: [
             IconButton(
                 onPressed: () => Navigator.pushNamed(context, "/home/schedule"),
-                icon: const Icon(Icons.event)),
+                icon: const Icon(
+                  Icons.event,
+                  color: Colors.grey,
+                )),
           ],
         ),
         SliverPadding(
           padding: const EdgeInsets.all(8.0),
           sliver: SliverList(
             delegate: SliverChildListDelegate([
-              // my sessions card
-              const Card(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Text("My Sessions"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            children: [
-                              Text("Upcoming"),
-                              Text("0"),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text("Completed"),
-                              Text("0"),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Text("Cancelled"),
-                              Text("0"),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-
+              const Text("Quick shortcuts",
+                  style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(
                 height: 10,
               ),
-              const Row(
+              SessionActionButton(
+                action: "My sessions",
+                onPressed: () => Navigator.pushNamed(context, "/home/schedule"),
+              ),
+              SessionActionButton(
+                action: "Find a mentor",
+                onPressed: () => Navigator.pushNamed(context, "/home/schedule"),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Recommended Mentors"),
+                  const Text("Recommended Mentors",
+                      style: TextStyle(fontWeight: FontWeight.w500)),
                   TextButton(
                     onPressed: null,
-                    child: Text("See All"),
+                    child: Text("See All",
+                        style:
+                            TextStyle(color: Theme.of(context).primaryColor)),
                   )
                 ],
               ),
@@ -98,46 +85,46 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 100,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: mentors.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                        child: SizedBox(
+                    return SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
-                      child: const MentorTile(
-                          name: "Mentors name",
-                          bio: "Short Bio",
-                          stars: 2,
-                          photoUrl:
-                              "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&q=80&w=1587&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-                    ));
+                      child: MentorTile(
+                        mentor: mentors[index],
+                      ),
+                    );
                   },
                 ),
               ),
               const SizedBox(
                 height: 10,
               ),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Topics"),
+                  const Text("Topics of Interest",
+                      style: TextStyle(fontWeight: FontWeight.w500)),
                   TextButton(
                     onPressed: null,
-                    child: Text("See All"),
+                    child: Text("See All",
+                        style:
+                            TextStyle(color: Theme.of(context).primaryColor)),
                   )
                 ],
               ),
-
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child: ListView.builder(itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text("Topic $index"),
-                      subtitle: const Text("Description"),
-                    ),
-                  );
-                }),
-              )
+                height: 210,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: mentors.length,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      child: const TopicTile(),
+                    );
+                  },
+                ),
+              ),
             ]),
           ),
         ),

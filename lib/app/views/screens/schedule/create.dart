@@ -129,7 +129,7 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
               _startTime.hour, _startTime.minute),
           DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day,
               _endTime.hour, _endTime.minute),
-          Colors.blue,
+          Theme.of(context).primaryColor,
           false,
         ),
       );

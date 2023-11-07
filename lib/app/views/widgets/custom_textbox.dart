@@ -7,21 +7,40 @@ class CustomTextBox extends StatelessWidget {
       this.hintText,
       this.suffixIcon,
       this.prefixIcon,
-      this.onSubmitted
-      });
+      this.obscureText,
+      this.borderColor,
+      this.backgroundColor,
+      this.validationMessage,
+      this.textColor,
+      this.onSubmitted});
 
   final TextEditingController? controller;
   final String? hintText;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
+  final bool? obscureText;
+  final Color? borderColor;
+  final Color? textColor;
+  final Color? backgroundColor;
+  final String? validationMessage;
   final Function(String)? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.8,
-      child: TextField(
+      child: TextFormField(
         controller: controller,
+        obscureText: obscureText ?? false,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return validationMessage ?? "Please enter some text";
+          }
+          return null;
+        },
+        onFieldSubmitted: onSubmitted,
+        style: TextStyle(
+          color: textColor ?? Colors.black,
+        ),
         decoration: InputDecoration(
           hintText: hintText ?? "Enter text",
           contentPadding: const EdgeInsets.all(16),
@@ -29,14 +48,20 @@ class CustomTextBox extends StatelessWidget {
             color: Colors.grey[400],
             fontWeight: FontWeight.w200,
           ),
-          border: UnderlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: Colors.grey[200],
+          fillColor: backgroundColor ?? Colors.grey[200],
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
         ),
       ),
     );
