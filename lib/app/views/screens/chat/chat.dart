@@ -37,29 +37,35 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: ListView.builder(
-              reverse: false, // Start from the bottom of the list
-              itemCount: _connections.length,
-              itemBuilder: (context, index) {
-                return IconButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, "/chat/mychat"),
-                    icon: ConversationTile(
-                      connectionName: _connections[index],));
-              },
-            ),
-          ),
-        ],
-      ),
+      body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: <Widget>[
+            SliverPadding(
+              padding: const EdgeInsets.all(8.0),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: ListView.builder(
+
+                      itemCount: _connections.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: ()=>{
+                            Navigator.pushNamed(context, "/Connection1"),
+                          },
+                          child: ConversationTile(connectionName: _connections[index],),
+                        );
+                      },
+                    ),
+                  ),
+                ]),
+              ),
+            )
+          ]
+      )
     );
 
     // return MaterialApp(
