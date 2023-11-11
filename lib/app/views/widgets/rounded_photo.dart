@@ -13,7 +13,7 @@ class RoundedPhoto extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.fromBorderSide(
           BorderSide(
-            color: Colors.pink,
+            color: Colors.deepOrangeAccent,
             width: 2,
           ),
         ),

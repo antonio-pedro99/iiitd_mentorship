@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/views/widgets/rounded_photo.dart';
 
 class ConversationTile extends StatelessWidget {
-  const ConversationTile({super.key, this.showDetails=true, this.connectionName = "My Friend"});
+  const ConversationTile({super.key, this.showDetails = true, this.receiverName = "My Friend"});
 
   final bool? showDetails;
-  final String? connectionName;
+  final String? receiverName;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class ConversationTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(connectionName!,
+                  Text(receiverName!,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(
                     width: 5,
@@ -40,7 +40,7 @@ class ConversationTile extends StatelessWidget {
                   height: 5,
                 ),
                 SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6, //0.7
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: const Text(
                       "Last message This message its too long and you wont read it all",
                       overflow: TextOverflow.ellipsis,
@@ -52,8 +52,8 @@ class ConversationTile extends StatelessWidget {
                       ),
                     )),
             ]:[
-              const Text("Friend's name",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(receiverName!,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ],
           )
         ],

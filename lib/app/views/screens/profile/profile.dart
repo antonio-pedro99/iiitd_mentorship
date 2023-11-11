@@ -127,7 +127,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                 ),
                 readOnly: !_isEditingName,
-                style: TextStyle(fontSize: 20), // Increased font size
+                style: TextStyle(fontSize: 20),
+                // Increased font size
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'Name cannot be empty';
@@ -148,7 +149,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                 ),
                 readOnly: !_isEditingEmail,
-                style: TextStyle(fontSize: 20), // Increased font size
+                style: TextStyle(fontSize: 20),
+                // Increased font size
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return 'Email cannot be empty';
