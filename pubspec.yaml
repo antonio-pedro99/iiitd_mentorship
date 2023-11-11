@@ -44,6 +44,7 @@ dependencies:
   http: ^1.1.0
   shared_preferences: ^2.2.2
   firebase_auth: ^4.12.1
+  cloud_firestore: ^4.13.0
 
 dev_dependencies:
   flutter_test:
