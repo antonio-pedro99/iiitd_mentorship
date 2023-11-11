@@ -151,6 +151,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     if (user != null) {
                       // Prepare the data to be stored
                       Map<String, dynamic> userData = {
+                        'uid': user.uid, // Using Firebase Auth user ID
                         'name': widget.name, // Passed from the previous screen
                         'email':
                             widget.email, // Passed from the previous screen
