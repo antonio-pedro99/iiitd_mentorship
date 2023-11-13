@@ -37,8 +37,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 setState(() {
                   filters.add(Chip(
                     label: Text(p0, key: ValueKey(p0)),
-                    color: MaterialStateColor.resolveWith((states) => Colors
-                        .primaries[filters.length % Colors.primaries.length]),
                     deleteIcon: const Icon(Icons.close),
                     onDeleted: () {
                       setState(() {

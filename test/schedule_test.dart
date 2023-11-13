@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 
 
 void main() {
   group('MySchedulesScreen Tests', () {
     testWidgets('MySchedulesScreen should display Month Agenda View in AppBar', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: MySchedulesScreen(title: 'Test')));
+      await tester.pumpWidget(const MaterialApp(home: MySchedulesScreen(title: 'Test')));
       expect(find.text('Month Agenda View'), findsOneWidget);
     });
 
     testWidgets('FloatingActionButton should navigate to ScheduleMeetingScreen', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: MySchedulesScreen(title: 'Test')));
+      await tester.pumpWidget(const MaterialApp(home: MySchedulesScreen(title: 'Test')));
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
     });
@@ -23,7 +22,7 @@ void main() {
 
   group('MeetingDataSource Tests', () {
     final List<Meeting> testMeetings = [
-      Meeting('Event 1', DateTime.now(), DateTime.now().add(Duration(hours: 1)), Colors.red, false),
+      Meeting('Event 1', DateTime.now(), DateTime.now().add(const Duration(hours: 1)), Colors.red, false),
     ];
 
     test('GetStartTime returns correct start time', () {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iiitd_mentorship/app/views/screens/schedule/create.dart';
-import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
 
 
 void main() {
