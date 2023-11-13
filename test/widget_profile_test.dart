@@ -5,7 +5,7 @@ import 'package:iiitd_mentorship/app/views/screens/profile/profile.dart';
 void main() {
   group('ProfileScreen Tests', () {
     testWidgets('Initial State Test', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: ProfileScreen()));
+      await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
       expect(find.text('Antonio Pedro'), findsOneWidget);
       expect(find.text('tonio.pedro99@gmail.com'), findsOneWidget);
       expect(find.byType(TextFormField), findsNWidgets(3));
@@ -13,7 +13,7 @@ void main() {
     });
 
     testWidgets('Edit Name Test', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: ProfileScreen()));
+      await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
       await tester.tap(find.byIcon(Icons.edit).first);
       await tester.pump();
       expect(find.widgetWithText(TextFormField, 'Antonio Pedro'), findsOneWidget);
@@ -23,7 +23,7 @@ void main() {
     });
 
     testWidgets('Edit Email Test', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: ProfileScreen()));
+      await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
       await tester.tap(find.byIcon(Icons.edit).last);
       await tester.pump();
       expect(find.widgetWithText(TextFormField, 'tonio.pedro99@gmail.com'), findsOneWidget);
@@ -34,7 +34,7 @@ void main() {
     });
 
     testWidgets('Form Validation Test', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: ProfileScreen()));
+      await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
       // Test for empty name field
       await tester.tap(find.byIcon(Icons.edit).first);
       await tester.pump();
