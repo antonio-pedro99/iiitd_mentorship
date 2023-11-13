@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
 import 'package:iiitd_mentorship/app/views/screens/schedule/create.dart';
 
 
 void main() {
   testWidgets('ScheduleMeetingScreen UI Test', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ScheduleMeetingScreen()));
+    await tester.pumpWidget(const MaterialApp(home: ScheduleMeetingScreen()));
 
     // Check if all the required widgets are present
     expect(find.byType(TextField), findsNWidgets(3));
@@ -43,7 +44,7 @@ void main() {
   });
 
   testWidgets('ScheduleMeetingScreen Functionality Test', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(home: ScheduleMeetingScreen()));
+    await tester.pumpWidget(const MaterialApp(home: ScheduleMeetingScreen()));
 
     // Simulate user input
     await tester.enterText(find.byType(TextField).at(0), 'Meeting Title');

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:iiitd_mentorship/app/data/model/meeting.dart';
+import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
 import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
-
-
 
 void main() {
   group('MySchedulesScreen Tests', () {
