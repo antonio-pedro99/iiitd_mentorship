@@ -2,18 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/meeting.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class MeetingData {
-  static List<Meeting> meetings = [];
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-  static addMeeting(Meeting meeting) {
-    meetings.add(meeting);
+class MeetingData {
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  static Future<void> addMeeting(Meeting meeting) async {
+    await _firestore.collection('meetings').add(meeting.toMap());
   }
 
-
-  static List<Meeting> getDataSource() {
-    return meetings;
+  static Stream<List<Meeting>> getMeetingsStream() {
+    return _firestore
+        .collection('meetings')
+        .where('userId', isEqualTo: _auth.currentUser?.uid)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => Meeting.fromMap(doc.data(), doc.id))
+        .toList());
   }
 }
+
 
 class MeetingDataSource extends CalendarDataSource {
   MeetingDataSource(List<Meeting> source) {

@@ -13,30 +13,30 @@ class MySchedulesScreen extends StatefulWidget {
 }
 
 class _MySchedulesScreenState extends State<MySchedulesScreen> {
-  List<Meeting> meetings = <Meeting>[];
-
-  @override
-  void initState() {
-    meetings = MeetingData.getDataSource();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Month Agenda View')),
-      body: SfCalendar(
-        view: CalendarView.month,
-        dataSource: MeetingDataSource(meetings),
-        monthViewSettings: const MonthViewSettings(showAgenda: true),
+      body: StreamBuilder<List<Meeting>>(
+        stream: MeetingData.getMeetingsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          if (!snapshot.hasData) {
+            return Text("No Meetings Found");
+          }
+          return SfCalendar(
+            view: CalendarView.month,
+            dataSource: MeetingDataSource(snapshot.data!),
+            monthViewSettings: const MonthViewSettings(showAgenda: true),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.push(context,
               MaterialPageRoute(builder: (context) => const ScheduleMeetingScreen()));
-          setState(() {
-            meetings = MeetingData.getDataSource();
-          });
         },
         child: const Icon(Icons.add),
       ),
