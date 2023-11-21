@@ -6,13 +6,13 @@ import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_dropdown.dart';
 
 class UserDetailsScreen extends StatefulWidget {
-  final String name;
-  final String email;
+  final String? name;
+  final String? email;
 
   const UserDetailsScreen({
     Key? key,
-    required this.name,
-    required this.email,
+    this.name,
+    this.email,
   }) : super(key: key);
 
   @override

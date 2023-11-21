@@ -27,11 +27,12 @@ sealed class ResponseBase {
   *
   */
 final class FirebaseResponse extends ResponseBase {
-  FirebaseResponse({required bool status, String? message, dynamic data})
+  FirebaseResponse(
+      {required bool status, String? message, dynamic data, error, code})
       : super(
             status: status,
             message: message,
-            data: null,
-            statusCode: null,
-            error: null);
+            data: data,
+            statusCode: code,
+            error: error);
 }

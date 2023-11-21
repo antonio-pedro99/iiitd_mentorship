@@ -42,15 +42,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 break;
               case Authenticated:
                 // Navigate to UserDetailsScreen when authenticated
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UserDetailsScreen(
-                    name: nameController.text,
-                    email: mailController.text,
-                    ),
-                  ),
-                );
+                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/userdetails", (route) => false);
                 break;
               case UnAuthenticated:
                 Navigator.pop(context);

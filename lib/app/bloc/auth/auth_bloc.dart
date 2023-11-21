@@ -32,7 +32,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           emit(_validateResponse(response));
           break;
+        case AuthLoginWithGoogle:
+          final response = await _auth.loginWithGoogle();
 
+          emit(_validateResponse(response));
+          break;
+        case AuthPhoneSignIn:
+          final phoneNumber = (event as AuthPhoneSignIn).phoneNumber;
+          final response = await _auth.phoneSignIn(phoneNumber);
+
+          emit(_validateResponse(response));
+          break;
         default:
       }
     });
