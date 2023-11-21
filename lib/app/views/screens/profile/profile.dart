@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // Import the image_picker package
+import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -10,50 +12,123 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool _isEditingName = false;
-  bool _isEditingEmail = false;
+  late TextEditingController _branchController;
+  late TextEditingController _courseController;
+  late TextEditingController _yearOfGraduationController;
+  late TextEditingController _collegeController;
+  late TextEditingController _companyController;
   late TextEditingController _nameController;
   late TextEditingController _emailController;
-  final _formKey = GlobalKey<FormState>(); // Add a key for the form
-  XFile? _profileImage; // XFile for picked image
-  final ImagePicker _picker = ImagePicker(); // Instantiate it
+  late TextEditingController _roleController;
+
+  bool _isEditingCollege = false;
+  bool _isEditingCompany = false;
+  final _formKey = GlobalKey<FormState>();
+  XFile? _profileImage;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: "Antonio Pedro");
-    _emailController = TextEditingController(text: "tonio.pedro99@gmail.com");
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _branchController = TextEditingController();
+    _courseController = TextEditingController();
+    _yearOfGraduationController = TextEditingController();
+    _collegeController = TextEditingController();
+    _companyController = TextEditingController();
+    _roleController = TextEditingController();
+
+    fetchUserProfile();
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
     super.dispose();
   }
 
-  void _toggleEditingName() {
+  void _toggleEditingCollege() {
     setState(() {
-      _isEditingName = !_isEditingName;
+      _isEditingCollege = !_isEditingCollege;
     });
   }
 
-  void _toggleEditingEmail() {
+  void _toggleEditingCompany() {
     setState(() {
-      _isEditingEmail = !_isEditingEmail;
+      _isEditingCompany = !_isEditingCompany;
     });
   }
 
-  void _updateProfile() {
+  void _updateProfile() async {
     if (_formKey.currentState!.validate()) {
-      // If the form is valid, display a snackbar and update the profile
+      // Show a loading Snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile Updated')),
+        SnackBar(content: Text('Updating Profile...')),
       );
+
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        try {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .update({
+            'college': _collegeController.text,
+            'company': _companyController.text,
+            // Update other fields as necessary
+          });
+
+          // Show a success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profile Updated Successfully')),
+          );
+        } catch (e) {
+          print('Error updating user data: $e');
+          // Show an error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error updating profile')),
+          );
+        }
+      }
+
       setState(() {
-        _isEditingName = false;
-        _isEditingEmail = false;
+        _isEditingCollege = false;
+        _isEditingCompany = false;
       });
+    }
+  }
+
+  Future<void> fetchUserProfile() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        DocumentSnapshot userProfile = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (userProfile.exists) {
+          Map<String, dynamic> userData =
+              userProfile.data() as Map<String, dynamic>;
+
+          _nameController.text = userData['name'] ?? '';
+          _emailController.text = userData['email'] ?? '';
+          _collegeController.text = userData['college'] ?? 'Not available';
+          _companyController.text = userData['company'] ?? 'Not available';
+          _branchController.text = userData['branch'] ?? 'Not available';
+          _courseController.text = userData['course'] ?? 'Not available';
+          _yearOfGraduationController.text =
+              userData['yearOfGraduation'] ?? 'Not available';
+
+          bool isMentor = userData['isMentor'] ?? false;
+
+          setState(() {
+            _roleController.text = isMentor ? 'Mentor' : 'Mentee';
+          });
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
+      }
     }
   }
 
@@ -66,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     } catch (e) {
-      // Handle any errors
+      print('Error picking image: $e');
     }
   }
 
@@ -76,101 +151,175 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text('Profile'),
         actions: [
-          if (_isEditingName || _isEditingEmail)
+          if (_isEditingCollege || _isEditingCompany)
             IconButton(
-              icon: Icon(Icons.check),
+              icon: Icon(Icons.save), // Changed to save icon
               onPressed: _updateProfile,
             )
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Form(
-          key: _formKey, // Set the form key
-          child: Column(
+          key: _formKey,
+          child: ListView(
+            // Used ListView for scrollable content
             children: [
               Stack(
-                alignment: Alignment.bottomRight,
+                clipBehavior: Clip
+                    .none, // Allow overflowing of children outside the stack
+                alignment: Alignment
+                    .center, // Align children to the center of the stack
                 children: [
                   CircleAvatar(
-                    radius: 70, // Increased radius for a larger profile picture
+                    radius: 60, // Radius of the profile picture
                     backgroundImage: _profileImage != null
                         ? FileImage(File(_profileImage!.path))
-                            as ImageProvider<Object> // Display the picked image
+                            as ImageProvider<Object>
                         : AssetImage('assets/profile_image.png')
                             as ImageProvider<Object>,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors
-                          .white, // A white background to ensure visibility
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.edit,
-                          color: Theme.of(context).primaryColor),
-                      onPressed: _pickImage, // Call the image picking function
+                  Positioned(
+                    right:
+                        45, // Position the edit icon to the right of the CircleAvatar
+                    bottom: 30,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 255, 255,
+                            255), // White background for visibility
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.edit,
+                            color: Theme.of(context).primaryColor),
+                        onPressed: _pickImage, // Image picking function
+                      ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 32), // Increased padding
+              SizedBox(height: 20),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  suffixIcon: _isEditingName
-                      ? null
-                      : IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: _toggleEditingName,
-                        ),
+                  prefixIcon: Icon(Icons.person), // Added icon
+                  filled: true, // Filled text box
+                  fillColor: Colors.grey[200], // Fill color
+                  // suffixIcon: _isEditingName
+                  //     ? null
+                  //     : IconButton(
+                  //         icon: Icon(Icons.edit),
+                  //         onPressed: _toggleEditingName,
+                  //       ),
                 ),
-                readOnly: !_isEditingName,
-                style: TextStyle(fontSize: 20),
-                // Increased font size
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Name cannot be empty';
-                  }
-                  return null;
-                },
+                readOnly: true,
+                style: TextStyle(fontSize: 16),
+                // validator: (value) {
+                //   if (value == null || value.trim().isEmpty) {
+                //     return 'Name cannot be empty';
+                //   }
+                //   return null;
+                // },
               ),
-              SizedBox(height: 24), // Increased padding
+              SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  suffixIcon: _isEditingEmail
-                      ? null
-                      : IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: _toggleEditingEmail,
-                        ),
+                  prefixIcon: Icon(Icons.email), // Added icon
+                  filled: true, // Filled text box
+                  fillColor: Colors.grey[200], // Fill color
                 ),
-                readOnly: !_isEditingEmail,
-                style: TextStyle(fontSize: 20),
-                // Increased font size
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Email cannot be empty';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
+                readOnly: true,
+                style: TextStyle(fontSize: 16),
               ),
-              SizedBox(
-                  height: 24), // Keep consistent spacing between the fields
+              SizedBox(height: 24),
               TextFormField(
-                initialValue: 'Mentee', // Set the initial value to 'Mentee'
+                controller: _roleController,
                 decoration: InputDecoration(
                   labelText: 'Role',
+                  prefixIcon: Icon(Icons.badge), // Added icon
+                  filled: true, // Filled text box
+                  fillColor: Colors.grey[200], // Fill color
                 ),
-                readOnly: true, // Make it read-only
-                style: TextStyle(fontSize: 20), // Keep the font size consistent
+                readOnly: true,
+                style: TextStyle(fontSize: 16),
               ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _courseController,
+                decoration: InputDecoration(
+                  labelText: 'Course',
+                  prefixIcon: Icon(Icons.school), // Added icon
+                  filled: true, // Filled text box
+                  fillColor: Colors.grey[200], // Fill color
+                ),
+                readOnly: true,
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _branchController,
+                decoration: InputDecoration(
+                  labelText: 'Branch',
+                  prefixIcon: Icon(Icons.domain_add), // Added icon
+                  filled: true, // Filled text box
+                  fillColor: Colors.grey[200], // Fill color
+                ),
+                readOnly: true,
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _yearOfGraduationController,
+                decoration: InputDecoration(
+                  labelText: 'Year of Graduation',
+                  prefixIcon: Icon(Icons.event), // Added icon
+                  filled: true, // Filled text box
+                  fillColor: Colors.grey[200], // Fill color
+                ),
+                readOnly: true,
+                style: TextStyle(fontSize: 16),
+              ),
+              if (_roleController.text != 'Mentee') ...[
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _collegeController,
+                  decoration: InputDecoration(
+                    labelText: 'College',
+                    prefixIcon: Icon(Icons.history_edu), // Added icon
+                    filled: true, // Filled text box
+                    fillColor: Colors.grey[200], // Fill color
+                    suffixIcon: _isEditingCollege
+                        ? null
+                        : IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: _toggleEditingCollege,
+                          ),
+                  ),
+                  readOnly: false,
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _companyController,
+                  decoration: InputDecoration(
+                    labelText: 'Company',
+                    prefixIcon: Icon(Icons.business_center), // Added icon
+                    filled: true, // Filled text box
+                    fillColor: Colors.grey[200], // Fill color
+                    suffixIcon: _isEditingCollege
+                        ? null
+                        : IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: _toggleEditingCompany,
+                          ),
+                  ),
+                  readOnly: false,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ]
             ],
           ),
         ),

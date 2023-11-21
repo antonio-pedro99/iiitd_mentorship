@@ -73,12 +73,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           child: Column(
             children: [
               CustomTextBox(
-                controller: yearOfJoiningController,
-                hintText: 'Year of Joining',
-                validationMessage: 'Please enter the year of joining',
-              ),
-              SizedBox(height: 20),
-              CustomTextBox(
                 controller: yearOfGraduationController,
                 hintText: 'Year of Graduation',
                 validationMessage: 'Please enter the year of graduation',
@@ -99,6 +93,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 validator: (value) =>
                     value == null ? 'Please select a course' : null,
               ),
+              SizedBox(height: 20),
               if (selectedCourse != null) SizedBox(height: 20),
               CustomDropdown(
                 labelText: 'Branch',
