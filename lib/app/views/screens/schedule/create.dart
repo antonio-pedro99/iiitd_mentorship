@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/meeting.dart';
 import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
+import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
+import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 
 class ScheduleMeetingScreen extends StatefulWidget {
   const ScheduleMeetingScreen({super.key});
@@ -24,25 +26,36 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
       appBar: AppBar(title: const Text('Schedule Meeting')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
+        child: DefaultTextStyle(
+          style: TextStyle(
+            fontSize: 15, // Set the font size
+            color: Colors.black, // Set the color
+            ),
         child: ListView(
           children: [
-            TextField(
+            const Text('Meeting Title'),
+            const SizedBox(height: 10),
+            CustomTextBox(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Meeting Title'),
+              validationMessage: 'Please enter meeting title',
+              hintText: 'Meeting Title',
             ),
             const SizedBox(height: 16),
-            TextField(
+            const Text('Meeting Description'),
+            const SizedBox(height: 10),
+            CustomTextBox(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Meeting Description'),
+              validationMessage: 'Please enter meeting description',
+              hintText: 'Meeting Description',
             ),
             const SizedBox(height: 16),
-            TextField(
+            const Text('Email IDs'),
+            const SizedBox(height: 10),
+            CustomTextBox(
               controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: 'Email IDs',
-                hintText: 'e.g. mentor@example.com, mentee@example.com',
-              ),
+              //keyboardType: TextInputType.emailAddress,
+              validationMessage: 'Please enter email IDs',
+              hintText: 'e.g. mentor@example.com, mentee@example.com',
             ),
             const SizedBox(height: 16),
             ListTile(
@@ -69,16 +82,17 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
               trailing: const Icon(Icons.access_time),
               onTap: _pickEndTime,
             ),
-            ElevatedButton(
+            CustomButton(
+              rounded: true,
               onPressed: _scheduleMeeting,
               child: const Text('Schedule Meeting'),
             ),
           ],
         ),
       ),
-    );
+    ),
+  );
   }
-
   _pickDate() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
