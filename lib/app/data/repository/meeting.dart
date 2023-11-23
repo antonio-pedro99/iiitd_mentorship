@@ -22,6 +22,11 @@ class MeetingData {
         .map((doc) => Meeting.fromMap(doc.data(), doc.id))
         .toList());
   }
+
+  static Future<void> deleteMeeting(String eventId) async {
+    await _firestore.collection('meetings').doc(eventId).delete();
+  }
+
 }
 
 

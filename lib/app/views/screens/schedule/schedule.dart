@@ -4,6 +4,7 @@ import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'create.dart';
+import 'meeting_details_page.dart';
 
 class MySchedulesScreen extends StatefulWidget {
   const MySchedulesScreen({super.key, required this.title});
@@ -30,6 +31,18 @@ class _MySchedulesScreenState extends State<MySchedulesScreen> {
             view: CalendarView.month,
             dataSource: MeetingDataSource(snapshot.data!),
             monthViewSettings: const MonthViewSettings(showAgenda: true),
+            onTap: (CalendarTapDetails details) {
+              if (details.targetElement == CalendarElement.appointment ||
+                  details.targetElement == CalendarElement.agenda) {
+                Meeting meeting = details.appointments![0] as Meeting;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MeetingDetailsPage(meeting: meeting),
+                  ),
+                );
+              }
+            },
           );
         },
       ),
@@ -43,4 +56,3 @@ class _MySchedulesScreenState extends State<MySchedulesScreen> {
     );
   }
 }
-
