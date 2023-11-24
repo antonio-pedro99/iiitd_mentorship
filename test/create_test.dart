@@ -48,6 +48,7 @@ void main() {
 
     testWidgets('shows error snackbar when attempting to schedule meeting with empty fields', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: ScheduleMeetingScreen()));
+      tester.ensureVisible(find.text('Schedule Meeting'));
       await tester.tap(find.text('Schedule Meeting'));
       await tester.pumpAndSettle();
 
@@ -57,6 +58,7 @@ void main() {
 
     testWidgets('shows error when fields are empty and Schedule Meeting button is pressed', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: ScheduleMeetingScreen()));
+      tester.ensureVisible(find.text('Schedule Meeting'));
       await tester.tap(find.text('Schedule Meeting'));
       await tester.pump();
       expect(find.text('All fields are required'), findsOneWidget);
