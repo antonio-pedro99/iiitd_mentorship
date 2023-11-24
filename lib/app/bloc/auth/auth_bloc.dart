@@ -10,6 +10,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _auth = AuthRepository();
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {

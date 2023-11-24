@@ -23,7 +23,11 @@ final class UserAuthSignUp extends UserAuth {
   final bool isMentor;
   final String name;
 
-  UserAuthSignUp({String? email, String? password, required this.isMentor, required this.name})
+  UserAuthSignUp(
+      {String? email,
+      String? password,
+      required this.isMentor,
+      required this.name})
       : super(email!, password!);
 
   UserAuthSignUp.fromJson(Map<String, dynamic> json)

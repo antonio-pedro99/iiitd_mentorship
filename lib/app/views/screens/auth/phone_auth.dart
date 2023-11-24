@@ -96,7 +96,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         //   AuthPhoneSignIn(
                         //       phoneNumber: "+91${phoneController.text}"),
                         // );
-                        
+
                         Navigator.pushNamed(context, "/otpscreen");
                       }
                     },

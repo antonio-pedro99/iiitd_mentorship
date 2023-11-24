@@ -4,7 +4,6 @@ import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
 import 'package:iiitd_mentorship/app/data/model/user_auth.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
-import 'package:iiitd_mentorship/app/views/screens/auth/user_detail.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

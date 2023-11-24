@@ -16,8 +16,10 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
       await tester.tap(find.byIcon(Icons.edit).first);
       await tester.pump();
-      expect(find.widgetWithText(TextFormField, 'Antonio Pedro'), findsOneWidget);
-      await tester.enterText(find.widgetWithText(TextFormField, 'Antonio Pedro'), 'New Name');
+      expect(
+          find.widgetWithText(TextFormField, 'Antonio Pedro'), findsOneWidget);
+      await tester.enterText(
+          find.widgetWithText(TextFormField, 'Antonio Pedro'), 'New Name');
       await tester.pump();
       expect(find.text('New Name'), findsNothing);
     });
@@ -26,8 +28,11 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: ProfileScreen()));
       await tester.tap(find.byIcon(Icons.edit).last);
       await tester.pump();
-      expect(find.widgetWithText(TextFormField, 'tonio.pedro99@gmail.com'), findsOneWidget);
-      await tester.enterText(find.widgetWithText(TextFormField, 'tonio.pedro99@gmail.com'), 'new.email@example.com');
+      expect(find.widgetWithText(TextFormField, 'tonio.pedro99@gmail.com'),
+          findsOneWidget);
+      await tester.enterText(
+          find.widgetWithText(TextFormField, 'tonio.pedro99@gmail.com'),
+          'new.email@example.com');
       await tester.tap(find.byIcon(Icons.check));
       await tester.pump();
       expect(find.text('new.email@example.com'), findsOneWidget);
@@ -38,14 +43,17 @@ void main() {
       // Test for empty name field
       await tester.tap(find.byIcon(Icons.edit).first);
       await tester.pump();
-      await tester.enterText(find.widgetWithText(TextFormField, 'Antonio Pedro'), '');
+      await tester.enterText(
+          find.widgetWithText(TextFormField, 'Antonio Pedro'), '');
       await tester.pump();
       expect(find.text('Name cannot be empty'), findsNothing);
 
       // Test for invalid email
       await tester.tap(find.byIcon(Icons.edit).last);
       await tester.pump();
-      await tester.enterText(find.widgetWithText(TextFormField, 'tonio.pedro99@gmail.com'), 'invalid-email');
+      await tester.enterText(
+          find.widgetWithText(TextFormField, 'tonio.pedro99@gmail.com'),
+          'invalid-email');
       await tester.tap(find.byIcon(Icons.check));
       await tester.pump();
       expect(find.text('Please enter a valid email'), findsOneWidget);

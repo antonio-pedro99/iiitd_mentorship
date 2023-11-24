@@ -19,16 +19,14 @@ class MeetingData {
         .where('userId', isEqualTo: _auth.currentUser?.uid)
         .snapshots()
         .map((snapshot) => snapshot.docs
-        .map((doc) => Meeting.fromMap(doc.data(), doc.id))
-        .toList());
+            .map((doc) => Meeting.fromMap(doc.data(), doc.id))
+            .toList());
   }
 
   static Future<void> deleteMeeting(String eventId) async {
     await _firestore.collection('meetings').doc(eventId).delete();
   }
-
 }
-
 
 class MeetingDataSource extends CalendarDataSource {
   MeetingDataSource(List<Meeting> source) {

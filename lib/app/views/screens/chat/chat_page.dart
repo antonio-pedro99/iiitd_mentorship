@@ -5,10 +5,7 @@ import 'package:iiitd_mentorship/app/views/screens/chat/chat_service.dart';
 import 'package:iiitd_mentorship/app/views/widgets/conversation_tile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
-import 'package:iiitd_mentorship/app/views/widgets/rounded_photo.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
-
 
 class ChatPage extends StatefulWidget {
   const ChatPage(
@@ -113,7 +110,7 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           // textField
           Expanded(
-            child:CustomTextBox(
+            child: CustomTextBox(
               validationMessage: "Please enter some text",
               controller: _messageController,
               hintText: 'Type a message',

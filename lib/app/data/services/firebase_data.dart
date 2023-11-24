@@ -1,3 +1,1 @@
-class FirebaseServiceData {
-  
-}
+class FirebaseServiceData {}

@@ -22,10 +22,10 @@ class _MySchedulesScreenState extends State<MySchedulesScreen> {
         stream: MeetingData.getMeetingsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData) {
-            return Text("No Meetings Found");
+            return const Center(child: Text("No Meetings Found"));
           }
           return SfCalendar(
             view: CalendarView.month,
@@ -48,8 +48,10 @@ class _MySchedulesScreenState extends State<MySchedulesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ScheduleMeetingScreen()));
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ScheduleMeetingScreen()));
         },
         child: const Icon(Icons.add),
       ),
