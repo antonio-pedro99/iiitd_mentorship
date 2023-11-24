@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   syncfusion_flutter_calendar: 23.1.43
   image_picker: 1.0.4
+  # latest version of mockito
+  mockito: ^5.4.3
+  build_runner: ^2.4.6
 
 
   # The following adds the Cupertino Icons font to your application.

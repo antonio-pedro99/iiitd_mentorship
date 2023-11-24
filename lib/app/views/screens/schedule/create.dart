@@ -23,7 +23,7 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Schedule Meeting')),
+      appBar: AppBar(title: const Text('Schedule Meeting Page')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: DefaultTextStyle(
