@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iiitd_mentorship/app/data/model/meeting.dart';
 import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
 import 'package:mockito/mockito.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 
@@ -21,7 +21,7 @@ class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}
 class MockUser extends Mock implements User {}
 
 void main() {
-  group('MeetingData', () {
+  group('MeetingService', () {
     late MockFirebaseFirestore mockFirestore;
     late MockFirebaseAuth mockAuth;
     late MockCollectionReference mockCollection;
@@ -47,9 +47,9 @@ void main() {
     });
   });
 
-  group('MeetingDataSource', () {
+  group('MeetingServiceRepository', () {
     late List<Meeting> meetings;
-    late MeetingDataSource dataSource;
+    late MeetingServiceRepository dataSource;
 
     setUp(() {
       meetings = [
@@ -77,7 +77,7 @@ void main() {
           'userId',
         ),
       ];
-      dataSource = MeetingDataSource(meetings);
+      dataSource = MeetingServiceRepository(meetings);
     });
 
     test('getStartTime returns correct start time for meetings', () {
@@ -106,7 +106,7 @@ void main() {
     });
 
     test('DataSource handles empty meeting list', () {
-      final emptyDataSource = MeetingDataSource([]);
+      final emptyDataSource = MeetingServiceRepository([]);
       expect(emptyDataSource.appointments?.isEmpty, true);
       expect(() => emptyDataSource.getStartTime(0), throwsRangeError);
       expect(() => emptyDataSource.getEndTime(0), throwsRangeError);

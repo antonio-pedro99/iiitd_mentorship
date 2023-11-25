@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/meeting.dart';
-import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
+import 'package:iiitd_mentorship/app/data/services/meeting.dart';
 
 class MeetingDetailsPage extends StatelessWidget {
   final Meeting meeting;
@@ -69,7 +69,7 @@ class MeetingDetailsPage extends StatelessWidget {
 
   void _cancelMeeting(BuildContext context) {
     // Implementation of the cancel meeting functionality
-    MeetingData.deleteMeeting(meeting.eventId).then((_) {
+    MeetingService.deleteMeeting(meeting.eventId).then((_) {
       Navigator.pop(context);
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
