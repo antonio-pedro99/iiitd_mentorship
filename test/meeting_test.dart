@@ -1,21 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iiitd_mentorship/app/data/model/meeting.dart';
 import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
 import 'package:mockito/mockito.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
+
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 class MockCollectionReference extends Mock implements CollectionReference {}
+
 class MockDocumentReference extends Mock implements DocumentReference {}
+
 class MockQuerySnapshot extends Mock implements QuerySnapshot {}
+
 class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}
+
 class MockUser extends Mock implements User {}
 
 void main() {
-  group('MeetingData', () {
+  group('MeetingService', () {
     late MockFirebaseFirestore mockFirestore;
     late MockFirebaseAuth mockAuth;
     late MockCollectionReference mockCollection;
@@ -34,17 +40,16 @@ void main() {
       // Setup mock responses
       when(mockCollection.doc(any)).thenReturn(mockDocument);
       when(mockCollection.add(any)).thenAnswer((_) async => mockDocument);
-      when(mockCollection.snapshots()).thenAnswer((_) => Stream.value(mockQuerySnapshot));
+      when(mockCollection.snapshots())
+          .thenAnswer((_) => Stream.value(mockQuerySnapshot));
       when(mockAuth.currentUser).thenReturn(mockUser);
       when(mockUser.uid).thenReturn('testUID');
     });
-
-
   });
 
-  group('MeetingDataSource', () {
+  group('MeetingServiceRepository', () {
     late List<Meeting> meetings;
-    late MeetingDataSource dataSource;
+    late MeetingServiceRepository dataSource;
 
     setUp(() {
       meetings = [
@@ -72,7 +77,7 @@ void main() {
           'userId',
         ),
       ];
-      dataSource = MeetingDataSource(meetings);
+      dataSource = MeetingServiceRepository(meetings);
     });
 
     test('getStartTime returns correct start time for meetings', () {
@@ -101,7 +106,7 @@ void main() {
     });
 
     test('DataSource handles empty meeting list', () {
-      final emptyDataSource = MeetingDataSource([]);
+      final emptyDataSource = MeetingServiceRepository([]);
       expect(emptyDataSource.appointments?.isEmpty, true);
       expect(() => emptyDataSource.getStartTime(0), throwsRangeError);
       expect(() => emptyDataSource.getEndTime(0), throwsRangeError);

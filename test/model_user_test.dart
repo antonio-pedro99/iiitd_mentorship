@@ -17,8 +17,7 @@ void main() {
           company: 'Example Company',
           isMentor: true,
           email: 'john@example.com',
-          isProfileComplete: true
-      );
+          isProfileComplete: true);
 
       expect(user.college, 'Example College');
       expect(user.yearOfGraduation, '2023');
@@ -60,8 +59,6 @@ void main() {
       expect(user.isMentor, true);
       expect(user.email, 'john@example.com');
       expect(user.isProfileComplete, true);
-
-
     });
 
     test('toJson converts a DBUser to JSON', () {
@@ -78,8 +75,7 @@ void main() {
           company: 'Example Company',
           isMentor: true,
           email: 'john@example.com',
-          isProfileComplete: true
-      );
+          isProfileComplete: true);
 
       final json = user.toJson();
 

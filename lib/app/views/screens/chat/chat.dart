@@ -14,16 +14,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _textController = TextEditingController();
   final List<String> _connections = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // void _handleSubmittedMessage(String text) {
-  //   setState(() {
-  //     _connections.insert(0, text); // Add the message to the list
-  //     _textController.clear(); // Clear the text input field
-  //   });
-  // }
 
   @override
   void initState() {
@@ -36,76 +28,10 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: _userList(),
-
-      // CustomScrollView(
-      //     physics: const BouncingScrollPhysics(),
-      //     slivers: <Widget>[
-      //       SliverPadding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         sliver: SliverList(
-      //           delegate: SliverChildListDelegate([
-      //             SizedBox(
-      //               height: MediaQuery
-      //                   .of(context)
-      //                   .size
-      //                   .height * 0.7,
-      //               child: ListView.builder(
-      //                 itemCount: _connections.length,
-      //                 itemBuilder: (context, index) {
-      //                   return GestureDetector(
-      //                     onTap: () =>
-      //                     {
-      //                       Navigator.pushNamed(context, "/Connection1"),
-      //                     },
-      //                     child: ConversationTile(
-      //                       connectionName: _connections[index],),
-      //                   );
-      //                 },
-      //               ),
-      //             ),
-      //           ]),
-      //         ),
-      //       )
-      //     ]
-      // )
-    );
-
-    // return MaterialApp(
-    //     routes: <String, WidgetBuilder>{
-    //       '/Connection1': (BuildContext context) => const MyChats(title: "Connection1"),
-    //       '/Connection2': (BuildContext context) => const MyChats(title: "Connection2"),
-    //     },
-    //     home: Scaffold(
-    //       appBar: AppBar(
-    //         backgroundColor: Theme
-    //             .of(context)
-    //             .colorScheme
-    //             .inversePrimary,
-    //         title: Text(widget.title),
-    //       ),
-    //       body: Column(
-    //         children: <Widget>[
-    //           Flexible(
-    //             child: ListView.builder(
-    //               reverse: false, // Start from the bottom of the list
-    //               itemCount: _connections.length,
-    //               itemBuilder: (context, index) {
-    //                 return IconButton(
-    //                     onPressed: () =>
-    //                         Navigator.pushNamed(context, "/Connection1"),
-    //                     icon: ConversationTile(
-    //                       connectionName: _connections[index],));
-    //               },
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     )
-    // );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: _userList());
   }
 
   //  building a list of user except current user

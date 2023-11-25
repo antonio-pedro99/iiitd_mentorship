@@ -15,8 +15,7 @@ void main() {
           DateTime(2023, 1, 1, 10, 0),
           Colors.blue,
           false,
-          'userId123'
-      );
+          'userId123');
 
       expect(meeting.eventName, 'Event Name');
       expect(meeting.title, 'Title');
@@ -54,7 +53,6 @@ void main() {
       expect(meeting.isAllDay, false);
     });
 
-
     test('toMap converts a Meeting to Map', () {
       final meeting = Meeting(
           'Event Name',
@@ -65,8 +63,7 @@ void main() {
           DateTime(2023, 1, 1, 10, 0),
           Colors.blue,
           false,
-          'userId123'
-      );
+          'userId123');
 
       final map = meeting.toMap();
 
@@ -82,4 +79,3 @@ void main() {
     });
   });
 }
-

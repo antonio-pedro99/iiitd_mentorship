@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iiitd_mentorship/app/data/model/mentor.dart';
 
-
 void main() {
   group('Mentor', () {
     test('fromJson creates a Mentor from JSON', () {
@@ -23,8 +22,18 @@ void main() {
 
     test('fromJsonList creates a list of Mentors from JSON list', () {
       final jsonList = [
-        {'bio': 'Bio 1', 'name': 'Name 1', 'photoUrl': 'http://example.com/photo1.jpg', 'stars': 5},
-        {'bio': 'Bio 2', 'name': 'Name 2', 'photoUrl': 'http://example.com/photo2.jpg', 'stars': 3}
+        {
+          'bio': 'Bio 1',
+          'name': 'Name 1',
+          'photoUrl': 'http://example.com/photo1.jpg',
+          'stars': 5
+        },
+        {
+          'bio': 'Bio 2',
+          'name': 'Name 2',
+          'photoUrl': 'http://example.com/photo2.jpg',
+          'stars': 3
+        }
       ];
 
       final mentors = Mentor.fromJsonList(jsonList);
@@ -40,8 +49,7 @@ void main() {
           bio: 'Sample Bio',
           name: 'Sample Name',
           photoUrl: 'http://example.com/photo.jpg',
-          stars: 4
-      );
+          stars: 4);
 
       final json = mentor.toJson();
 

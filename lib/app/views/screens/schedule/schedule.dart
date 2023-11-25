@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/meeting.dart';
 import 'package:iiitd_mentorship/app/data/repository/meeting.dart';
+import 'package:iiitd_mentorship/app/data/services/meeting.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import 'create.dart';
@@ -19,7 +20,7 @@ class _MySchedulesScreenState extends State<MySchedulesScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Month Agenda View')),
       body: StreamBuilder<List<Meeting>>(
-        stream: MeetingData.getMeetingsStream(),
+        stream: MeetingService.getMeetingsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -29,7 +30,7 @@ class _MySchedulesScreenState extends State<MySchedulesScreen> {
           }
           return SfCalendar(
             view: CalendarView.month,
-            dataSource: MeetingDataSource(snapshot.data!),
+            dataSource: MeetingServiceRepository(snapshot.data!),
             monthViewSettings: const MonthViewSettings(showAgenda: true),
             onTap: (CalendarTapDetails details) {
               if (details.targetElement == CalendarElement.appointment ||
