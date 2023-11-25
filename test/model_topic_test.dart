@@ -8,8 +8,7 @@ void main() {
           title: 'Sample Title',
           description: 'Sample Description',
           imageUrl: 'http://example.com/image.jpg',
-          id: '1'
-      );
+          id: '1');
 
       expect(topic.title, 'Sample Title');
       expect(topic.description, 'Sample Description');

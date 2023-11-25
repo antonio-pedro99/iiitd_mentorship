@@ -7,11 +7,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
+
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 class MockCollectionReference extends Mock implements CollectionReference {}
+
 class MockDocumentReference extends Mock implements DocumentReference {}
+
 class MockQuerySnapshot extends Mock implements QuerySnapshot {}
+
 class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}
+
 class MockUser extends Mock implements User {}
 
 void main() {
@@ -34,12 +40,11 @@ void main() {
       // Setup mock responses
       when(mockCollection.doc(any)).thenReturn(mockDocument);
       when(mockCollection.add(any)).thenAnswer((_) async => mockDocument);
-      when(mockCollection.snapshots()).thenAnswer((_) => Stream.value(mockQuerySnapshot));
+      when(mockCollection.snapshots())
+          .thenAnswer((_) => Stream.value(mockQuerySnapshot));
       when(mockAuth.currentUser).thenReturn(mockUser);
       when(mockUser.uid).thenReturn('testUID');
     });
-
-
   });
 
   group('MeetingDataSource', () {
