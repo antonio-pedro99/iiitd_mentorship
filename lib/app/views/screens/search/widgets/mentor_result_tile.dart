@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:iiitd_mentorship/app/data/model/mentor.dart';
+import 'package:iiitd_mentorship/app/data/model/user.dart';
 
 class MentorResultTile extends StatelessWidget {
   const MentorResultTile({super.key, required this.mentor});
 
-  final Mentor mentor;
+  final DBUser mentor;
 
   @override
   Widget build(BuildContext context) {
@@ -22,67 +22,51 @@ class MentorResultTile extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                image: DecorationImage(
+                image: const DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(mentor.photoUrl),
+                  image: NetworkImage(
+                      "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&q=80&w=1587&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
                 ),
               ),
             ),
             const SizedBox(width: 10.0),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    mentor.name,
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  mentor.name!,
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(height: 5),
-                  Text(mentor.bio,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: const TextStyle(
-                        fontSize: 11.0,
-                        color: Colors.grey,
-                      )),
-                  Row(
+                ),
+                const SizedBox(height: 5),
+                Text(mentor.company ?? "No Company",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      fontSize: 11.0,
+                      color: Colors.grey,
+                    )),
+                const Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
                     children: [
-                      Row(
-                        children: <Widget>[
-                          const Icon(Icons.star, color: Colors.yellow),
-                          Text(mentor.stars.toString()),
-                        ],
+                      Text("Available for"),
+                      Icon(
+                        Icons.video_call,
+                        color: Colors.green,
+                        size: 18,
                       ),
-                      const SizedBox(width: 10),
-                      const Row(
-                        children: [
-                          Text("Available for"),
-                          Icon(
-                            Icons.video_call,
-                            color: Colors.green,
-                            size: 18,
-                          ),
-                          Icon(
-                            Icons.chat,
-                            color: Colors.green,
-                            size: 18,
-                          ),
-                        ],
+                      Icon(
+                        Icons.chat,
+                        color: Colors.green,
+                        size: 18,
                       ),
-                      const Spacer(),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.favorite_border,
-                            size: 18,
-                          ))
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

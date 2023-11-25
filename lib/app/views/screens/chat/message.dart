@@ -7,16 +7,15 @@ class Message {
   final String message;
   final Timestamp timestamp;
 
-  Message({
-    required this.senderId,
-    required this.senderEmail,
-    required this.receiverId,
-    required this.timestamp,
-    required this.message
-  });
+  Message(
+      {required this.senderId,
+      required this.senderEmail,
+      required this.receiverId,
+      required this.timestamp,
+      required this.message});
 
   // convert to map (as data is stored in firebase as map)
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'senderId': senderId,
       'senderEmail': senderEmail,

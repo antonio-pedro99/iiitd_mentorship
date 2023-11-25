@@ -29,6 +29,13 @@
             {
               "client_id": "1077659098219-uiegruhf41mgsol9ufnvqp36mp7efc2u.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1077659098219-i14nr9otgut0t00hgnsed4kr1obf669c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.iiitdMentorship"
+              }
             }
           ]
         }

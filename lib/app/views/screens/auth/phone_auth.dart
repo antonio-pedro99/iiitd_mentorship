@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
-import 'package:iiitd_mentorship/app/data/model/user_auth.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class PhoneAuthScreen extends StatefulWidget {
+  const PhoneAuthScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<PhoneAuthScreen> createState() => _PhoneAuthScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   final formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -67,13 +65,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SizedBox(
                     child: Image.asset(
                       "assets/on_3.png",
-                      height: MediaQuery.of(context).size.height * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.2,
                       fit: BoxFit.contain,
                     ),
                   ),
                 ),
                 const Text(
-                  'Log in',
+                  'Phone verification',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -81,18 +79,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 10),
                 CustomTextBox(
-                  controller: emailController,
+                  controller: phoneController,
                   validationMessage: 'Please enter your email',
-                  hintText: 'Email',
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                CustomTextBox(
-                  controller: passwordController,
-                  obscureText: true,
-                  validationMessage: 'Please enter your password',
-                  hintText: 'Password',
+                  hintText: 'Phone(+91 XXXXXXXXXX)',
                 ),
                 const SizedBox(
                   height: 20,
@@ -103,44 +92,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     rounded: true,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(
-                              AuthLogin(
-                                user: UserAuthLogin(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                ),
-                              ),
-                            );
+                        // BlocProvider.of<AuthBloc>(context).add(
+                        //   AuthPhoneSignIn(
+                        //       phoneNumber: "+91${phoneController.text}"),
+                        // );
+
+                        Navigator.pushNamed(context, "/otpscreen");
                       }
                     },
-                    child: const Text('Login'),
+                    child: const Text('Send OTP'),
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Center(child: Text("Or login with")),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(AuthLoginWithGoogle());
-                      },
-                      color: Colors.white,
-                      minWidth: 100,
-                      textColor: Colors.black,
-                      padding: const EdgeInsets.all(16),
-                      shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide:
-                              const BorderSide(color: Colors.grey, width: .2)),
-                      child: Image.asset(
-                        "assets/google.png",
-                        height: 24,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

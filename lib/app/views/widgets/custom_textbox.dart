@@ -38,6 +38,7 @@ class CustomTextBox extends StatelessWidget {
           return null;
         },
         onFieldSubmitted: onSubmitted,
+        onChanged: onSubmitted,
         style: TextStyle(
           color: textColor ?? Colors.black,
         ),

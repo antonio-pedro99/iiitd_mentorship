@@ -5,10 +5,7 @@ import 'package:iiitd_mentorship/app/views/screens/chat/chat_service.dart';
 import 'package:iiitd_mentorship/app/views/widgets/conversation_tile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
-import 'package:iiitd_mentorship/app/views/widgets/rounded_photo.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
-
 
 class ChatPage extends StatefulWidget {
   const ChatPage(
@@ -49,6 +46,12 @@ class _ChatPageState extends State<ChatPage> {
             receiverName: widget.receiverName,
             showDetails: false,
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.flag),
+              onPressed: () {},
+            ),
+          ],
         ),
         body: Column(
           children: [
@@ -67,16 +70,21 @@ class _ChatPageState extends State<ChatPage> {
             widget.receiverUserID, _firebaseAuth.currentUser!.uid),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text('Error${snapshot.error}');
+            return Center(child: Text('Error${snapshot.error}'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text('Loading..');
+            return const Center(child: Text('Loading..'));
           }
-          return ListView(
-            children: snapshot.data!.docs
-                .map((document) => _buildMessageItem(document))
-                .toList(),
-          );
+          return snapshot.data != null || snapshot.data!.docs.isNotEmpty
+              ? ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  reverse: true,
+                  itemBuilder: (context, index) {
+                    return _buildMessageItem(snapshot.data!.docs[index]);
+                  },
+                )
+              : const Center(
+                  child: Text('No messages yet! Send a message to start chat'));
         });
   }
 
@@ -109,27 +117,27 @@ class _ChatPageState extends State<ChatPage> {
   Widget _buildMessageInput() {
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).primaryColor),
-      child: Row(
-        children: [
-          // textField
-          Expanded(
-            child:CustomTextBox(
-              validationMessage: "Please enter some text",
-              controller: _messageController,
-              hintText: 'Type a message',
-              obscureText: false,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            // textField
+            Expanded(
+              child: CustomTextBox(
+                validationMessage: "Please enter some text",
+                controller: _messageController,
+                hintText: 'Type a message',
+                obscureText: false,
+              ),
             ),
-          ),
 
-          // send Icon button
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: sendMessage,
-          ),
-          Container(
-            width: 10,
-          )
-        ],
+            // send Icon button
+            IconButton(
+              icon: const Icon(Icons.send),
+              onPressed: sendMessage,
+            ),
+          ],
+        ),
       ),
     );
   }

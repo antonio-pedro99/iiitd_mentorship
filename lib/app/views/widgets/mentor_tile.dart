@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:iiitd_mentorship/app/data/model/mentor.dart';
+import 'package:iiitd_mentorship/app/data/model/user.dart';
 
 class MentorTile extends StatelessWidget {
   const MentorTile({super.key, required this.mentor});
 
-  final Mentor mentor;
+  final DBUser mentor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,10 @@ class MentorTile extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                image: DecorationImage(
+                image: const DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(mentor.photoUrl),
+                  image: NetworkImage(
+                      "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&q=80&w=1587&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
                 ),
               ),
             ),
@@ -33,25 +34,28 @@ class MentorTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    mentor.name,
+                    mentor.name!,
                     style: const TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 5),
-                  Text(mentor.bio,
+                  Text(mentor.company ?? "No Company",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
                         fontSize: 11.0,
                         color: Colors.grey,
                       )),
-                  const SizedBox(height: 5),
+                  const Spacer(),
                   Row(
                     children: <Widget>[
-                      const Icon(Icons.star, color: Colors.yellow),
-                      Text(mentor.stars.toString()),
+                      Text("${mentor.course!} ${mentor.branch!}",
+                          style: const TextStyle(
+                            fontSize: 11.0,
+                            color: Colors.grey,
+                          )),
                     ],
                   ),
                 ],

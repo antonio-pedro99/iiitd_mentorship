@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
-import 'package:iiitd_mentorship/app/data/model/user_auth.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
-import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class OTPScreen extends StatefulWidget {
+  const OTPScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<OTPScreen> createState() => _OTPScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _OTPScreenState extends State<OTPScreen> {
   final formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController _controllerOne = TextEditingController();
+  final TextEditingController _controllerTwo = TextEditingController();
+  final TextEditingController _controllerThree = TextEditingController();
+  final TextEditingController _controllerFour = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -67,32 +67,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: SizedBox(
                     child: Image.asset(
                       "assets/on_3.png",
-                      height: MediaQuery.of(context).size.height * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.2,
                       fit: BoxFit.contain,
                     ),
                   ),
                 ),
                 const Text(
-                  'Log in',
+                  'Enter the OTP',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 10),
-                CustomTextBox(
-                  controller: emailController,
-                  validationMessage: 'Please enter your email',
-                  hintText: 'Email',
-                ),
                 const SizedBox(
                   height: 20,
                 ),
-                CustomTextBox(
-                  controller: passwordController,
-                  obscureText: true,
-                  validationMessage: 'Please enter your password',
-                  hintText: 'Password',
+                SizedBox(
+                  width: double.infinity,
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildOTPField(_controllerOne),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      _buildOTPField(_controllerTwo),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      _buildOTPField(_controllerThree),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      _buildOTPField(_controllerFour),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -102,49 +113,49 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: CustomButton(
                     rounded: true,
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        context.read<AuthBloc>().add(
-                              AuthLogin(
-                                user: UserAuthLogin(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                ),
-                              ),
-                            );
-                      }
+                      if (formKey.currentState!.validate()) {}
                     },
-                    child: const Text('Login'),
+                    child: const Text('Verify OTP'),
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Center(child: Text("Or login with")),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(AuthLoginWithGoogle());
-                      },
-                      color: Colors.white,
-                      minWidth: 100,
-                      textColor: Colors.black,
-                      padding: const EdgeInsets.all(16),
-                      shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide:
-                              const BorderSide(color: Colors.grey, width: .2)),
-                      child: Image.asset(
-                        "assets/google.png",
-                        height: 24,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildOTPField(TextEditingController controller) {
+    return SizedBox(
+      width: 50,
+      height: 70,
+      child: TextFormField(
+        controller: controller,
+        textAlign: TextAlign.center,
+        canRequestFocus: true,
+        keyboardType: TextInputType.number,
+        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
+        onEditingComplete: () {
+          FocusScope.of(context).nextFocus();
+        },
+        onChanged: (value) {
+          if (value.length == 1) {
+            FocusScope.of(context).nextFocus();
+          }
+        },
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(16),
+          hintStyle: TextStyle(
+            color: Colors.grey[400],
+            fontWeight: FontWeight.w200,
+          ),
+          hintMaxLines: 1,
+          counterText: "",
+        ),
+        maxLength: 1,
+        showCursor: false,
       ),
     );
   }

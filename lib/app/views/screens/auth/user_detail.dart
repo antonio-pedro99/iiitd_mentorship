@@ -6,13 +6,13 @@ import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_dropdown.dart';
 
 class UserDetailsScreen extends StatefulWidget {
-  final String name;
-  final String email;
+  final String? name;
+  final String? email;
 
   const UserDetailsScreen({
     Key? key,
-    required this.name,
-    required this.email,
+    this.name,
+    this.email,
   }) : super(key: key);
 
   @override
@@ -73,12 +73,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           child: Column(
             children: [
               CustomTextBox(
-                controller: yearOfJoiningController,
-                hintText: 'Year of Joining',
-                validationMessage: 'Please enter the year of joining',
-              ),
-              SizedBox(height: 20),
-              CustomTextBox(
                 controller: yearOfGraduationController,
                 hintText: 'Year of Graduation',
                 validationMessage: 'Please enter the year of graduation',
@@ -99,6 +93,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 validator: (value) =>
                     value == null ? 'Please select a course' : null,
               ),
+              SizedBox(height: 20),
               if (selectedCourse != null) SizedBox(height: 20),
               CustomDropdown(
                 labelText: 'Branch',

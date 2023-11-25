@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/login.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/onboarding.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/otp_screen.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/phone_auth.dart';
 import 'package:iiitd_mentorship/app/views/screens/auth/signup.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/user_detail.dart';
 import 'package:iiitd_mentorship/app/views/screens/chat/chat.dart';
 import 'package:iiitd_mentorship/app/views/screens/driver.dart';
 import 'package:iiitd_mentorship/app/views/screens/home/home.dart';
@@ -36,6 +39,9 @@ class MyApp extends StatelessWidget {
             'onboarding': (BuildContext context) => const OnBoardsScreen(),
             '/login': (BuildContext context) => const LoginScreen(),
             '/signup': (BuildContext context) => const SignUpScreen(),
+            '/phoneauth': (BuildContext context) => const PhoneAuthScreen(),
+            '/otpscreen': (BuildContext context) => const OTPScreen(),
+            '/userdetails': (BuildContext context) => const UserDetailsScreen(),
             '/chat': (BuildContext context) =>
                 const ChatScreen(title: "Welcome to Chat"),
             '/home/schedule': (BuildContext context) =>

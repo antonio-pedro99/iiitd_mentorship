@@ -10,6 +10,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _auth = AuthRepository();
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {
@@ -32,7 +33,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
           emit(_validateResponse(response));
           break;
+        case AuthLoginWithGoogle:
+          final response = await _auth.loginWithGoogle();
 
+          emit(_validateResponse(response));
+          break;
+        case AuthPhoneSignIn:
+          final phoneNumber = (event as AuthPhoneSignIn).phoneNumber;
+          final response = await _auth.phoneSignIn(phoneNumber);
+
+          emit(_validateResponse(response));
+          break;
         default:
       }
     });

@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:iiitd_mentorship/app/data/model/user_auth.dart';
 
 void main() {
-
   group('UserAuthLogin', () {
     test('should create a valid UserAuthLogin object', () {
-      final userAuthLogin = UserAuthLogin(email: 'test@example.com', password: 'password');
+      final userAuthLogin =
+          UserAuthLogin(email: 'test@example.com', password: 'password');
 
       expect(userAuthLogin, isA<UserAuthLogin>());
       expect(userAuthLogin.email, equals('test@example.com'));
@@ -15,7 +15,12 @@ void main() {
 
   group('UserAuthSignUp', () {
     test('fromJson() should return a valid UserAuthSignUp object', () {
-      final json = {'email': 'test@example.com', 'password': 'password', 'isMentor': true, 'name': 'John Doe'};
+      final json = {
+        'email': 'test@example.com',
+        'password': 'password',
+        'isMentor': true,
+        'name': 'John Doe'
+      };
       final userAuthSignUp = UserAuthSignUp.fromJson(json);
 
       expect(userAuthSignUp, isA<UserAuthSignUp>());
@@ -26,7 +31,11 @@ void main() {
     });
 
     test('toJson() should return a valid JSON object', () {
-      final userAuthSignUp = UserAuthSignUp(email: 'test@example.com', password: 'password', isMentor: true, name: 'John Doe');
+      final userAuthSignUp = UserAuthSignUp(
+          email: 'test@example.com',
+          password: 'password',
+          isMentor: true,
+          name: 'John Doe');
       final json = userAuthSignUp.toJson();
 
       expect(json['email'], equals('test@example.com'));

@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/views/screens/chat/chat_page.dart';
 import 'package:iiitd_mentorship/app/views/widgets/conversation_tile.dart';
-import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
-import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
-import 'package:iiitd_mentorship/app/views/widgets/rounded_photo.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, required this.title});
@@ -138,22 +134,20 @@ class _ChatScreenState extends State<ChatScreen> {
     // display all users except current user
     if (_auth.currentUser!.email != data['email']) {
       return ListTile(
-        title: ConversationTile(
-          receiverName: data['name']),
+        title: ConversationTile(receiverName: data['name']),
         onTap: () {
           // pass the clicked user's UID to the chat page
           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChatPage(
-              receiverUserEmail: data['email'],
-              receiverUserID:  data['uid'],
-              receiverName: data['name'],
-            ))
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChatPage(
+                        receiverUserEmail: data['email'],
+                        receiverUserID: data['uid'],
+                        receiverName: data['name'],
+                      )));
         },
       );
-    }
-    else{
+    } else {
       return Container();
     }
   }
