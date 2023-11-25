@@ -12,13 +12,11 @@ void main() {
   group('MeetingDetailsPage Tests', () {
     late Meeting testMeeting;
     late MockNavigatorObserver mockObserver;
-    late MockRoute mockRoute;
 
     setUp(() {
       testMeeting = Meeting('eventName', 'title', 'description', 'emailIDs',
           DateTime.now(), DateTime.now(), Colors.blue, true, 'userId');
       mockObserver = MockNavigatorObserver();
-      mockRoute = MockRoute();
     });
 
     testWidgets('should display meeting details correctly', (tester) async {
