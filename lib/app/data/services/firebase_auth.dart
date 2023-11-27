@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -9,9 +10,6 @@ class FirebaseServiceAuth {
   bool isSignedUp = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  User? _currentUser;
-
-  User? get currentUser => _currentUser;
 
   Future<FirebaseResponse> signUpWithGoogle() async {
     try {
@@ -33,15 +31,13 @@ class FirebaseServiceAuth {
           idToken: googleSignInAuthentication.idToken,
           accessToken: googleSignInAuthentication.accessToken);
 
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-      _currentUser = userCredential.user;
+      final userCreds = await _auth.signInWithCredential(credential);
+
       return FirebaseResponse(
-        status: true,
-        message: 'User signed in with Google successfully',
-        data: _currentUser,
-        code: 200,
-      );
+          status: true,
+          message: 'User signed in with Google successfully',
+          code: 200,
+          data: userCreds);
     } catch (exception) {
       return FirebaseResponse(
         status: false,
@@ -194,7 +190,6 @@ class FirebaseServiceAuth {
     try {
       await _auth.signOut();
       _googleSignIn.disconnect();
-      _currentUser = null;
       firebaseResponse.status = true;
       firebaseResponse.message = 'User signed out successfully';
       firebaseResponse.statusCode = 200;
@@ -233,6 +228,35 @@ class FirebaseServiceAuth {
       return firebaseResponse;
     } on FirebaseAuthException catch (e) {
       firebaseResponse.message = 'Error sending email verification';
+      firebaseResponse.statusCode = 400;
+      firebaseResponse.error = e;
+    }
+
+    return firebaseResponse;
+  }
+
+  Future<FirebaseResponse> userAlreadySignedUp(String email) async {
+    var firebaseResponse = FirebaseResponse(status: false);
+
+    try {
+      var response = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (response.docs.isNotEmpty) {
+        firebaseResponse.status = true;
+        firebaseResponse.message = 'User already signed up';
+        firebaseResponse.statusCode = 200;
+        firebaseResponse.data = true;
+      } else {
+        firebaseResponse.status = true;
+        firebaseResponse.message = 'User not signed up';
+        firebaseResponse.statusCode = 200;
+        firebaseResponse.data = false;
+      }
+    } on FirebaseException catch (e) {
+      firebaseResponse.message = 'Eror checking if user already signed up';
       firebaseResponse.statusCode = 400;
       firebaseResponse.error = e;
     }

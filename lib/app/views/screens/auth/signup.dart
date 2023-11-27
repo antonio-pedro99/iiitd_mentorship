@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
+import 'package:iiitd_mentorship/app/data/model/auth_status.dart';
 import 'package:iiitd_mentorship/app/data/model/user_auth.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/user_detail.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 
@@ -13,7 +15,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  bool isMentor = false;
   bool readterms = false;
   bool readpolicy = false;
 
@@ -40,13 +41,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 );
                 break;
               case Authenticated:
-                // Navigate to UserDetailsScreen when authenticated
-                Navigator.pop(context);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "/userdetails", (route) => false);
+                if ((state as Authenticated).status == AuthStatus.pending) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UserDetailsScreen(
+                              name: nameController.text,
+                              email: mailController.text)),
+                      (route) => false);
+                }
                 break;
               case UnAuthenticated:
-                Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text((state as UnAuthenticated).message),
@@ -101,15 +106,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(
                   height: 20,
-                ),
-                SwitchListTile(
-                  title: Text(isMentor ? 'Mentor' : 'Student'),
-                  value: isMentor,
-                  onChanged: (bool value) {
-                    setState(() {
-                      isMentor = value;
-                    });
-                  },
                 ),
 
                 // two checkboxes for reading policy and terms
@@ -175,7 +171,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         BlocProvider.of<AuthBloc>(context).add(AuthSignUp(
                           user: UserAuthSignUp(
                             name: nameController.text,
-                            isMentor: isMentor,
                             email: mailController.text,
                             password: passwordController.text,
                           ),

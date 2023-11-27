@@ -159,200 +159,203 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: _updateProfile,
             ),
           IconButton(
-              onPressed: () => context.read<AuthBloc>().add(AuthLogout()),
+              onPressed: () =>
+                  BlocProvider.of<AuthBloc>(context).add(AuthLogout()),
               icon: const Icon(Icons.logout))
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: BlocConsumer<AuthBloc, AuthState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              Widget widget;
+        child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
+          if (state is Authenticated) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/onboarding', (Route<dynamic> route) => false);
+          }
+        }, builder: (context, state) {
+          Widget widget;
 
-              if (state is AuthLoading) {
-                widget = const Center(
-                  child: Column(
+          if (state is AuthLoading) {
+            widget = const Center(
+              child: Column(
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 10),
+                  Text('Signing out...'),
+                ],
+              ),
+            );
+          } else if (state is Authenticated || state is AuthInitial) {
+            widget = Form(
+              key: _formKey,
+              child: ListView(
+                // Used ListView for scrollable content
+                children: [
+                  Stack(
+                    clipBehavior: Clip
+                        .none, // Allow overflowing of children outside the stack
+                    alignment: Alignment
+                        .center, // Align children to the center of the stack
                     children: [
-                      const CircularProgressIndicator(),
-                      const SizedBox(height: 10),
-                      Text('Signing out...'),
+                      CircleAvatar(
+                        radius: 60, // Radius of the profile picture
+                        backgroundImage: _profileImage != null
+                            ? FileImage(File(_profileImage!.path))
+                                as ImageProvider<Object>
+                            : AssetImage('assets/profile_image.png')
+                                as ImageProvider<Object>,
+                      ),
+                      Positioned(
+                        right:
+                            45, // Position the edit icon to the right of the CircleAvatar
+                        bottom: 30,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255,
+                                255), // White background for visibility
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.edit,
+                                color: Theme.of(context).primaryColor),
+                            onPressed: _pickImage, // Image picking function
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                );
-              } else if (state is Authenticated || state is AuthInitial) {
-                widget = Form(
-                  key: _formKey,
-                  child: ListView(
-                    // Used ListView for scrollable content
-                    children: [
-                      Stack(
-                        clipBehavior: Clip
-                            .none, // Allow overflowing of children outside the stack
-                        alignment: Alignment
-                            .center, // Align children to the center of the stack
-                        children: [
-                          CircleAvatar(
-                            radius: 60, // Radius of the profile picture
-                            backgroundImage: _profileImage != null
-                                ? FileImage(File(_profileImage!.path))
-                                    as ImageProvider<Object>
-                                : AssetImage('assets/profile_image.png')
-                                    as ImageProvider<Object>,
-                          ),
-                          Positioned(
-                            right:
-                                45, // Position the edit icon to the right of the CircleAvatar
-                            bottom: 30,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 255,
-                                    255), // White background for visibility
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                icon: Icon(Icons.edit,
-                                    color: Theme.of(context).primaryColor),
-                                onPressed: _pickImage, // Image picking function
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: 'Name',
-                          prefixIcon: Icon(Icons.person), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                          // suffixIcon: _isEditingName
-                          //     ? null
-                          //     : IconButton(
-                          //         icon: Icon(Icons.edit),
-                          //         onPressed: _toggleEditingName,
-                          //       ),
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                        // validator: (value) {
-                        //   if (value == null || value.trim().isEmpty) {
-                        //     return 'Name cannot be empty';
-                        //   }
-                        //   return null;
-                        // },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 24),
-                      TextFormField(
-                        controller: _roleController,
-                        decoration: InputDecoration(
-                          labelText: 'Role',
-                          prefixIcon: Icon(Icons.badge), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _courseController,
-                        decoration: InputDecoration(
-                          labelText: 'Course',
-                          prefixIcon: Icon(Icons.school), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _branchController,
-                        decoration: InputDecoration(
-                          labelText: 'Branch',
-                          prefixIcon: Icon(Icons.domain_add), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _yearOfGraduationController,
-                        decoration: InputDecoration(
-                          labelText: 'Year of Graduation',
-                          prefixIcon: Icon(Icons.event), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      if (_roleController.text != 'Mentee') ...[
-                        SizedBox(height: 20),
-                        TextFormField(
-                          controller: _collegeController,
-                          decoration: InputDecoration(
-                            labelText: 'College',
-                            prefixIcon: Icon(Icons.history_edu), // Added icon
-                            filled: true, // Filled text box
-                            fillColor: Colors.grey[200], // Fill color
-                            suffixIcon: _isEditingCollege
-                                ? null
-                                : IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: _toggleEditingCollege,
-                                  ),
-                          ),
-                          readOnly: false,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          controller: _companyController,
-                          decoration: InputDecoration(
-                            labelText: 'Company',
-                            prefixIcon:
-                                Icon(Icons.business_center), // Added icon
-                            filled: true, // Filled text box
-                            fillColor: Colors.grey[200], // Fill color
-                            suffixIcon: _isEditingCollege
-                                ? null
-                                : IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: _toggleEditingCompany,
-                                  ),
-                          ),
-                          readOnly: false,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ]
-                    ],
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                      // suffixIcon: _isEditingName
+                      //     ? null
+                      //     : IconButton(
+                      //         icon: Icon(Icons.edit),
+                      //         onPressed: _toggleEditingName,
+                      //       ),
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                    // validator: (value) {
+                    //   if (value == null || value.trim().isEmpty) {
+                    //     return 'Name cannot be empty';
+                    //   }
+                    //   return null;
+                    // },
                   ),
-                );
-              } else {
-                widget = const Center(
-                  child: Text('Error fetching user data'),
-                );
-              }
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 24),
+                  TextFormField(
+                    controller: _roleController,
+                    decoration: InputDecoration(
+                      labelText: 'Role',
+                      prefixIcon: Icon(Icons.badge), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _courseController,
+                    decoration: InputDecoration(
+                      labelText: 'Course',
+                      prefixIcon: Icon(Icons.school), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _branchController,
+                    decoration: InputDecoration(
+                      labelText: 'Branch',
+                      prefixIcon: Icon(Icons.domain_add), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _yearOfGraduationController,
+                    decoration: InputDecoration(
+                      labelText: 'Year of Graduation',
+                      prefixIcon: Icon(Icons.event), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  if (_roleController.text != 'Mentee') ...[
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: _collegeController,
+                      decoration: InputDecoration(
+                        labelText: 'College',
+                        prefixIcon: Icon(Icons.history_edu), // Added icon
+                        filled: true, // Filled text box
+                        fillColor: Colors.grey[200], // Fill color
+                        suffixIcon: _isEditingCollege
+                            ? null
+                            : IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: _toggleEditingCollege,
+                              ),
+                      ),
+                      readOnly: false,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: _companyController,
+                      decoration: InputDecoration(
+                        labelText: 'Company',
+                        prefixIcon: Icon(Icons.business_center), // Added icon
+                        filled: true, // Filled text box
+                        fillColor: Colors.grey[200], // Fill color
+                        suffixIcon: _isEditingCollege
+                            ? null
+                            : IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: _toggleEditingCompany,
+                              ),
+                      ),
+                      readOnly: false,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ]
+                ],
+              ),
+            );
+          } else {
+            widget = const Center(
+              child: Text('Error fetching user data'),
+            );
+          }
 
-              return widget;
-            }),
+          return widget;
+        }),
       ),
     );
   }
