@@ -22,9 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => AuthBloc(),
-          )
+          BlocProvider(create: (context) => AuthBloc()),
         ],
         child: MaterialApp(
           title: 'Stamp',
@@ -43,7 +41,8 @@ class MyApp extends StatelessWidget {
             '/phoneauth': (BuildContext context) => const PhoneAuthScreen(),
             '/otpscreen': (BuildContext context) => const OTPScreen(),
             '/userdetails': (BuildContext context) => const UserDetailsScreen(),
-            '/search': (BuildContext context) => const SearchScreen(),
+            '/search': (BuildContext context) =>
+                const SearchScreen(forMessage: false),
             '/chat': (BuildContext context) =>
                 const ChatScreen(title: "Welcome to Chat"),
             '/home/schedule': (BuildContext context) =>

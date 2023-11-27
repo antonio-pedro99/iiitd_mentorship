@@ -1,20 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:iiitd_mentorship/app/data/model/chat/conversation.dart';
 import 'package:iiitd_mentorship/app/views/widgets/rounded_photo.dart';
+import 'package:intl/intl.dart';
 
 class ConversationTile extends StatelessWidget {
   const ConversationTile(
-      {super.key, this.showDetails = true, this.receiverName = "My Friend"});
+      {super.key, this.showDetails = true, required this.chat});
 
   final bool? showDetails;
-  final String? receiverName;
+
+  final ChatConversation chat;
+
+  bool imSender(uid) => chat.users.first == uid;
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    var lastMessageTimeDateTime = chat.lastMessageTime != null
+        ? (chat.lastMessageTime as Timestamp).toDate()
+        : DateTime.now();
+    var now = DateTime.now();
+    var difference = now.difference(lastMessageTimeDateTime);
+
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
         children: [
-          const RoundedPhoto(),
+          RoundedPhoto(
+            url: imSender(currentUser!.uid)
+                ? chat.receiverImage
+                : chat.senderImage,
+          ),
           const SizedBox(
             width: 10,
           ),
@@ -25,14 +43,22 @@ class ConversationTile extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(receiverName!,
+                        Text(
+                            imSender(currentUser.uid)
+                                ? chat.receiverName!
+                                : chat.senderName!,
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(
                           width: 5,
                         ),
-                        const Text("Oct 30",
-                            style: TextStyle(
+                        Text(
+                            difference.inDays > 0
+                                ? DateFormat('dd/MM/yyyy')
+                                    .format(lastMessageTimeDateTime)
+                                : DateFormat('hh:mm a')
+                                    .format(lastMessageTimeDateTime),
+                            style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w100)),
@@ -43,11 +69,11 @@ class ConversationTile extends StatelessWidget {
                     ),
                     SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
-                        child: const Text(
-                          "Last message This message its too long and you wont read it all",
+                        child: Text(
+                          chat.lastMessage!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -55,7 +81,7 @@ class ConversationTile extends StatelessWidget {
                         )),
                   ]
                 : [
-                    Text(receiverName!,
+                    Text(chat.receiverName!,
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
           )
