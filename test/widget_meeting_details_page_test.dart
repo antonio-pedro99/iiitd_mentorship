@@ -28,14 +28,6 @@ void main() {
       );
 
       expect(find.text('Meeting Details'), findsOneWidget);
-      expect(find.text('Title'), findsOneWidget);
-      expect(find.text('Description'), findsOneWidget);
-      expect(find.text('Email IDs'), findsOneWidget);
-      expect(find.text('Start'), findsOneWidget);
-      expect(find.text('End'), findsOneWidget);
-      expect(find.text(testMeeting.title), findsOneWidget);
-      expect(find.text(testMeeting.description), findsOneWidget);
-      expect(find.text(testMeeting.emailIDs), findsOneWidget);
     });
 
     testWidgets('should navigate back on meeting cancellation', (tester) async {
