@@ -12,6 +12,7 @@ import 'package:iiitd_mentorship/app/views/screens/driver.dart';
 import 'package:iiitd_mentorship/app/views/screens/home/home.dart';
 import 'package:iiitd_mentorship/app/views/screens/profile/profile.dart';
 import 'package:iiitd_mentorship/app/views/screens/schedule/schedule.dart';
+import 'package:iiitd_mentorship/app/views/screens/search/search.dart';
 import 'package:iiitd_mentorship/theme.dart';
 
 class MyApp extends StatelessWidget {
@@ -40,6 +41,8 @@ class MyApp extends StatelessWidget {
             '/phoneauth': (BuildContext context) => const PhoneAuthScreen(),
             '/otpscreen': (BuildContext context) => const OTPScreen(),
             '/userdetails': (BuildContext context) => const UserDetailsScreen(),
+            '/search': (BuildContext context) =>
+                const SearchScreen(forMessage: false),
             '/chat': (BuildContext context) =>
                 const ChatScreen(title: "Welcome to Chat"),
             '/home/schedule': (BuildContext context) =>

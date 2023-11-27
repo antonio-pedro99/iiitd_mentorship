@@ -81,10 +81,7 @@ class ConversationTile extends StatelessWidget {
                         )),
                   ]
                 : [
-                    Text(
-                        imSender(currentUser.uid)
-                            ? chat.receiverName!
-                            : chat.senderName!,
+                    Text(chat.receiverName!,
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
           )
