@@ -35,7 +35,7 @@ class _DriverPageState extends State<DriverPage> {
         },
         children: const [
           MyHomePage(),
-          SearchScreen(),
+          SearchScreen(forMessage: false),
           ChatScreen(title: "Chats"),
           ProfileScreen()
         ],

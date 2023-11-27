@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:iiitd_mentorship/app/data/services/chat_service.dart';
+import 'package:iiitd_mentorship/app/data/model/chat/conversation.dart';
+import 'package:iiitd_mentorship/app/data/model/chat/message.dart';
+import 'package:iiitd_mentorship/app/data/model/user.dart';
 import 'package:iiitd_mentorship/app/views/widgets/conversation_tile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
@@ -9,14 +11,11 @@ import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage(
-      {super.key,
-      required this.receiverUserEmail,
-      required this.receiverUserID,
-      required this.receiverName});
+      {super.key, this.chatConversation, this.receiverUser, this.receiverId});
 
-  final String receiverUserEmail;
-  final String receiverUserID;
-  final String receiverName;
+  final ChatConversation? chatConversation;
+  final DBUser? receiverUser;
+  final String? receiverId;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -24,18 +23,76 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
-  final ChatService _chatService = ChatService();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  var isNewChat = false;
+  final currentUser = FirebaseAuth.instance.currentUser;
+  final db = FirebaseFirestore.instance;
+  String currentChatId = "";
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      if (widget.chatConversation == null) {
+        isNewChat = true;
+      } else {
+        currentChatId = widget.chatConversation!.id!;
+      }
+    });
+  }
 
   void sendMessage() async {
-    // send only if there is a message
-    if (_messageController.text.isNotEmpty) {
-      await _chatService.sendMessage(
-          widget.receiverUserID, _messageController.text);
+    final Message newMessage = Message(
+        senderId: currentUser!.uid,
+        senderEmail: currentUser!.email.toString(),
+        receiverId: widget.receiverUser == null
+            ? widget.receiverId!
+            : widget.receiverUser!.uid!,
+        timestamp: Timestamp.now(),
+        message: _messageController.text);
+    _messageController.clear();
+    final chatId = isNewChat ? await createChatRoom() : currentChatId;
 
-      // clear controller after sending the message
-      _messageController.clear();
-    }
+    // add message to chat room
+    await db
+        .collection('chat_rooms')
+        .doc(chatId)
+        .collection("messages")
+        .add(newMessage.toJson());
+    setState(() {
+      isNewChat = false;
+      currentChatId = chatId;
+    });
+
+    // update chat room
+    await db.collection('chat_rooms').doc(chatId).update({
+      'lastMessage': newMessage.message,
+      'lastMessageTime': newMessage.timestamp,
+      'hasUnreadMessages': false,
+      'unreadMessagesCount': 0,
+    });
+  }
+
+  Future<String> createChatRoom() async {
+    final chatRoomDB = await db.collection('chat_rooms').add({});
+
+    final chatRoom = ChatConversation.fromJson({
+      'id': chatRoomDB.id,
+      'senderName': currentUser!.displayName,
+      'receiverName': widget.receiverUser!.name,
+      'senderImage': widget.receiverUser!.photoUrl,
+      'receiverImage': widget.receiverUser!.photoUrl,
+      'lastMessage': _messageController.text,
+      'lastMessageTime': Timestamp.now(),
+      'hasUnreadMessages': false,
+      'users': [currentUser!.uid, widget.receiverUser!.uid],
+      'unreadMessagesCount': 0,
+    });
+
+    // update chat room
+    await chatRoomDB.update(chatRoom.toJson());
+
+    return chatRoomDB.id;
   }
 
   @override
@@ -43,7 +100,13 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
         appBar: AppBar(
           title: ConversationTile(
-            receiverName: widget.receiverName,
+            chat: widget.chatConversation != null
+                ? ChatConversation.copyWithConversation(
+                    widget.chatConversation!,
+                  )
+                : ChatConversation.copyWithReceiver(
+                    widget.receiverUser!,
+                  ),
             showDetails: false,
           ),
           actions: [
@@ -53,52 +116,79 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ],
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: _buildMessageList(),
-            ),
-            _buildMessageInput(),
-          ],
-        ));
+        body: isNewChat ? _buildNewChat() : _buildChat());
   }
 
-  // build message list
-  Widget _buildMessageList() {
-    return StreamBuilder(
-        stream: _chatService.getMessage(
-            widget.receiverUserID, _firebaseAuth.currentUser!.uid),
+  Widget _buildNewChat() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Spacer(),
+        const Icon(Icons.chat_bubble_outline),
+        const SizedBox(height: 20),
+        const Text('Start a conversation'),
+        const Spacer(),
+        _buildMessageInput()
+      ],
+    );
+  }
+
+  Widget _buildChat() {
+    return Column(
+      children: [
+        Expanded(
+          child: _buildMessageList(currentChatId),
+        ),
+        _buildMessageInput(),
+      ],
+    );
+  }
+
+  Widget _buildMessageList(String chatId) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: db
+            .collection("chat_rooms")
+            .doc(chatId)
+            .collection('messages')
+            .orderBy('timestamp', descending: false)
+            .snapshots(),
         builder: (context, snapshot) {
+          Widget child;
           if (snapshot.hasError) {
-            return Center(child: Text('Error${snapshot.error}'));
+            child = Center(child: Text(snapshot.error.toString()));
+          } else if (snapshot.hasData) {
+            final data = snapshot.data!.docs
+                .map<Message>(
+                    (e) => Message.fromJson(e.data() as Map<String, dynamic>))
+                .toList();
+            if (data.isEmpty) {
+              child = const Center(child: Text("No chats yet"));
+            } else {
+              child = ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return _buildMessageItem(data[index]);
+                },
+              );
+            }
+          } else {
+            child = const Center(child: CircularProgressIndicator());
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: Text('Loading..'));
-          }
-          return snapshot.data != null || snapshot.data!.docs.isNotEmpty
-              ? ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  reverse: true,
-                  itemBuilder: (context, index) {
-                    return _buildMessageItem(snapshot.data!.docs[index]);
-                  },
-                )
-              : const Center(
-                  child: Text('No messages yet! Send a message to start chat'));
+
+          return child;
         });
   }
 
   // build message item
-  Widget _buildMessageItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+  Widget _buildMessageItem(Message message) {
+    var dateTime = message.timestamp.toDate();
 
     //align message to left for received message and right for sent ones
-    var isMe = (data['senderId'] == _firebaseAuth.currentUser!.uid);
-    var dateTime = data['timestamp'].toDate();
+    var isMe = message.senderId == currentUser!.uid;
 
     return MessageTile(
       isMe: isMe,
-      message: data['message'],
+      message: message.message,
       time: DateFormat('kk:mm').format(dateTime),
     );
   }

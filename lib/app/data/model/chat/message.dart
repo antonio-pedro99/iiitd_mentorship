@@ -15,7 +15,7 @@ class Message {
       required this.message});
 
   // convert to map (as data is stored in firebase as map)
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'senderId': senderId,
       'senderEmail': senderEmail,
@@ -23,5 +23,16 @@ class Message {
       'message': message,
       'timestamp': timestamp,
     };
+  }
+
+  // convert from map to message
+  factory Message.fromJson(Map<String, dynamic> json) {
+    return Message(
+      senderId: json['senderId'],
+      senderEmail: json['senderEmail'],
+      receiverId: json['receiverId'],
+      message: json['message'],
+      timestamp: json['timestamp'],
+    );
   }
 }

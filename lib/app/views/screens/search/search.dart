@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/user.dart';
+import 'package:iiitd_mentorship/app/views/screens/chat/chat_page.dart';
 import 'package:iiitd_mentorship/app/views/screens/search/widgets/mentor_result_tile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({
     super.key,
+    required this.forMessage,
   });
-
+  final bool forMessage;
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -31,6 +34,8 @@ class _SearchScreenState extends State<SearchScreen> {
         .asStream();
   }
 
+  final currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +57,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 setState(() {
                   mentorsFiltered.clear();
                   event.docs.forEach((element) {
-                    mentorsFiltered.add(DBUser.fromJson(element.data()));
+                    final mentor = DBUser.fromJson(element.data());
+                    if (mentor.uid != currentUser!.uid) {
+                      mentorsFiltered.add(mentor);
+                    }
                   });
                 });
               });
@@ -124,8 +132,36 @@ class _SearchScreenState extends State<SearchScreen> {
                           ? ListView.builder(
                               itemCount: mentorsFiltered.length,
                               itemBuilder: (context, index) {
-                                return MentorResultTile(
-                                    mentor: mentorsFiltered[index]);
+                                return InkResponse(
+                                  onTap: () {
+                                    if (widget.forMessage) {
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatPage(
+                                              receiverUser:
+                                                  mentorsFiltered[index]),
+                                        ),
+                                      );
+                                    } else {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => Scaffold(
+                                            appBar: AppBar(
+                                              title: Text(
+                                                  mentorsFiltered[index].name!),
+                                            ),
+                                            body: Center(
+                                              child: Text(
+                                                  mentorsFiltered[index].name!),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: MentorResultTile(
+                                      mentor: mentorsFiltered[index]),
+                                );
                               },
                             )
                           : const Center(child: CircularProgressIndicator()),
