@@ -19,8 +19,4 @@ final class AuthLogout extends AuthEvent {}
 
 final class AuthLoginWithGoogle extends AuthEvent {}
 
-final class AuthPhoneSignIn extends AuthEvent {
-  final String phoneNumber;
-
-  AuthPhoneSignIn({required this.phoneNumber});
-}
+final class AuthSignUpWithGoogle extends AuthEvent {}

@@ -33,6 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return FirebaseFirestore.instance
         .collection("users")
         .where("isMentor", isEqualTo: true)
+        //    .where("uid", isNotEqualTo: currentUser!.uid)
         .snapshots();
   }
 
@@ -134,8 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       !userData.isMentor!
                           ? SessionActionButton(
                               action: "Find a mentor",
-                              onPressed: () => Navigator.pushNamed(
-                                  context, "/home/schedule"),
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, "/search"),
                             )
                           : Container(),
                       const SizedBox(
@@ -163,7 +164,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           builder: (context, mentorsSnapshot) {
                             if (mentorsSnapshot.hasData) {
                               final mentorsData = mentorsSnapshot.data!;
-                              final mentorsList = mentorsData.docs;
+                              final List<DBUser> mentorsList = mentorsData.docs
+                                  .map<DBUser>((e) {
+                                    return DBUser.fromJson(e.data());
+                                  })
+                                  .toList()
+                                  .where((element) {
+                                    return element.uid != currentUser!.uid;
+                                  })
+                                  .toList();
 
                               return SizedBox(
                                 height: 100,
@@ -176,8 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             MediaQuery.of(context).size.width *
                                                 0.7,
                                         child: MentorTile(
-                                          mentor: DBUser.fromJson(
-                                              mentorsList[index].data()),
+                                          mentor: mentorsList[index],
                                         ));
                                   },
                                 ),
@@ -252,10 +260,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                         return a["from"]
                                             .toDate()
                                             .compareTo(b["from"].toDate());
-                                      });
-
-                                      sessionsList.forEach((element) {
-                                        print(currentUser!.email);
                                       });
 
                                       return ListView.builder(
