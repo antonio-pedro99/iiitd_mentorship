@@ -203,16 +203,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: _updateProfile,
             ),
           IconButton(
-              onPressed: () => context.read<AuthBloc>().add(AuthLogout()),
+              onPressed: () =>
+                  BlocProvider.of<AuthBloc>(context).add(AuthLogout()),
               icon: const Icon(Icons.logout))
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: BlocConsumer<AuthBloc, AuthState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              Widget widget;
+        child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
+          if (state is Authenticated) {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/onboarding', (Route<dynamic> route) => false);
+          }
+        }, builder: (context, state) {
+          Widget widget;
 
               if (state is AuthLoading) {
                 widget = const Center(
@@ -395,8 +399,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               }
 
-              return widget;
-            }),
+          return widget;
+        }),
       ),
     );
   }

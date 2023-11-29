@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iiitd_mentorship/app/bloc/auth/auth_bloc.dart';
+import 'package:iiitd_mentorship/app/data/model/auth_status.dart';
+import 'package:iiitd_mentorship/app/views/screens/auth/user_detail.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 
 class OnBoardsScreen extends StatefulWidget {
@@ -15,9 +17,10 @@ class _OnBoardsScreenState extends State<OnBoardsScreen> {
   @override
   void initState() {
     super.initState();
+    final status = context.read<AuthBloc>().status;
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (mounted) {
-        if (user != null) {
+        if (user != null && status == AuthStatus.unknown) {
           Navigator.pushNamedAndRemoveUntil(
               context, "/driver", (route) => false);
         }
@@ -44,12 +47,35 @@ class _OnBoardsScreenState extends State<OnBoardsScreen> {
                   );
                   break;
                 case Authenticated:
-                  Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, "/driver", (route) => false);
+                  final user =
+                      (state as Authenticated).response.data as UserCredential;
+                  final status = state.status;
+                  switch (status) {
+                    case AuthStatus.authenticated:
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/driver", (route) => false);
+                      break;
+                    case AuthStatus.pending:
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserDetailsScreen(
+                                  name: user.user!.displayName,
+                                  email: user.user!.email)),
+                          (route) => false);
+                      break;
+                    case AuthStatus.unauthenticated:
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/onboarding", (route) => false);
+                      break;
+                    case AuthStatus.unknown:
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/onboarding", (route) => false);
+                      break;
+                    default:
+                  }
                   break;
                 case UnAuthenticated:
-                  Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text((state as UnAuthenticated).message),
@@ -116,7 +142,9 @@ class _OnBoardsScreenState extends State<OnBoardsScreen> {
                       children: [
                         MaterialButton(
                           onPressed: () {
-                            context.read<AuthBloc>().add(AuthLoginWithGoogle());
+                            context
+                                .read<AuthBloc>()
+                                .add(AuthSignUpWithGoogle());
                           },
                           color: Colors.white,
                           minWidth: 100,

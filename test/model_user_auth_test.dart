@@ -26,21 +26,18 @@ void main() {
       expect(userAuthSignUp, isA<UserAuthSignUp>());
       expect(userAuthSignUp.email, equals('test@example.com'));
       expect(userAuthSignUp.password, equals('password'));
-      expect(userAuthSignUp.isMentor, equals(true));
+
       expect(userAuthSignUp.name, equals('John Doe'));
     });
 
     test('toJson() should return a valid JSON object', () {
       final userAuthSignUp = UserAuthSignUp(
-          email: 'test@example.com',
-          password: 'password',
-          isMentor: true,
-          name: 'John Doe');
+          email: 'test@example.com', password: 'password', name: 'John Doe');
       final json = userAuthSignUp.toJson();
 
       expect(json['email'], equals('test@example.com'));
       expect(json['password'], equals('password'));
-      expect(json['isMentor'], equals(true));
+
       expect(json['name'], equals('John Doe'));
     });
   });

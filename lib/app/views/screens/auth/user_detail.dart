@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:iiitd_mentorship/app/data/model/user.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_dropdown.dart';
@@ -10,17 +11,18 @@ class UserDetailsScreen extends StatefulWidget {
   final String? email;
 
   const UserDetailsScreen({
-    Key? key,
+    super.key,
     this.name,
     this.email,
-  }) : super(key: key);
+  });
 
   @override
-  _UserDetailsScreenState createState() => _UserDetailsScreenState();
+  State<UserDetailsScreen> createState() => _UserDetailsScreenState();
 }
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final formKey = GlobalKey<FormState>();
+  late TextEditingController yearOfJoiningController;
   late TextEditingController yearOfGraduationController;
   late TextEditingController collegeController;
   late TextEditingController companyController;
@@ -44,13 +46,15 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    yearOfJoiningController = TextEditingController();
     yearOfGraduationController = TextEditingController();
     collegeController = TextEditingController();
     companyController = TextEditingController();
   }
 
   @override
-  void dispose() {;
+  void dispose() {
+    yearOfJoiningController.dispose();
     yearOfGraduationController.dispose();
     collegeController.dispose();
     companyController.dispose();
@@ -59,10 +63,18 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
   bool isMentor = false;
 
+  Future<void> completeUserDetails(DBUser user) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .set(user.toJson());
+  }
+
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-      appBar: AppBar(title: Text('User Details')),
+      appBar: AppBar(title: const Text('User Details')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -74,7 +86,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 hintText: 'Year of Graduation',
                 validationMessage: 'Please enter the year of graduation',
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CustomDropdown(
                 labelText: 'Course',
                 value: selectedCourse,
@@ -90,8 +102,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 validator: (value) =>
                     value == null ? 'Please select a course' : null,
               ),
-              SizedBox(height: 20),
-              if (selectedCourse != null) SizedBox(height: 20),
+              const SizedBox(height: 20),
+              if (selectedCourse != null) const SizedBox(height: 20),
               CustomDropdown(
                 labelText: 'Branch',
                 value: selectedBranch,
@@ -110,7 +122,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 validator: (value) =>
                     value == null ? 'Please select a branch' : null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               SwitchListTile(
                 title: const Text('Are you interested to become a mentor?'),
                 value: isMentor,
@@ -121,78 +133,63 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 },
               ),
               if (isMentor) ...[
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 CustomTextBox(
                   controller: collegeController,
                   hintText: 'College',
                   validationMessage: 'Please enter the college name',
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 CustomTextBox(
                   controller: companyController,
                   hintText: 'Company',
                   validationMessage: 'Please enter the company name',
                 ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CustomButton(
-                onPressed: () async {
+                onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    // Fetch the current user
-                    User? user = FirebaseAuth.instance.currentUser;
-                    if (user != null) {
-                      // Prepare the data to be stored
-                      Map<String, dynamic> userData = {
-                        'uid': user.uid, // Using Firebase Auth user ID
-                        'name': widget.name, // Passed from the previous screen
-                        'email':
-                            widget.email, // Passed from the previous screen
-                        'yearOfGraduation': yearOfGraduationController.text,
-                        'course': selectedCourse,
-                        'branch': selectedBranch,
-                        'isMentor': isMentor,
-                        'adminApproval': false, // Default value
-                      };
+                    DBUser userMentor = DBUser(
+                        uid: user!.uid,
+                        name: widget.name,
+                        email: widget.email,
+                        yearOfGraduation: yearOfGraduationController.text,
+                        yearOfJoining: yearOfJoiningController.text,
+                        course: selectedCourse,
+                        branch: selectedBranch,
+                        isMentor: isMentor,
+                        college: collegeController.text,
+                        company: companyController.text,
+                        adminApproval: false,
+                        isProfileComplete: true);
 
-                      if (isMentor) {
-                        userData['college'] = collegeController.text;
-                        userData['company'] = companyController.text;
-                      }
+                    DBUser userStudent = DBUser(
+                        uid: user.uid,
+                        name: widget.name,
+                        email: widget.email,
+                        yearOfGraduation: yearOfGraduationController.text,
+                        yearOfJoining: yearOfJoiningController.text,
+                        course: selectedCourse,
+                        branch: selectedBranch,
+                        isMentor: isMentor,
+                        adminApproval: false,
+                        isProfileComplete: true);
 
-                      // Store in Firestore
-                      try {
-                        await FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(user.uid) // Using Firebase Auth user ID
-                            .set(userData);
-
-                        // Handle successful submission
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Details submitted successfully!')),
-                        );
-
-                        // Optionally navigate to another screen or reset the form
-                        // Navigator.pushReplacement(...);
-                      } catch (e) {
-                        // Display error message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  'Failed to submit details: ${e.toString()}')),
-                        );
-                      }
+                    if (isMentor) {
+                      completeUserDetails(userMentor).then((value) {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/driver', (route) => false);
+                      });
                     } else {
-                      // Handle user not logged in scenario
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                'No authenticated user found. Please log in.')),
-                      );
+                      completeUserDetails(userStudent).then((value) {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/driver', (route) => false);
+                      });
                     }
                   }
                 },
-                child: Text('Submit'),
+                child: const Text('Submit'),
               ),
             ],
           ),

@@ -18,7 +18,7 @@ sealed class ResponseBase {
     };
   }
 
-  bool get hasError => error != null;
+  bool get hasError => error.runtimeType != Null;
   bool get hasData => data != null;
 }
 
