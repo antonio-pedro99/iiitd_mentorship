@@ -21,7 +21,6 @@ class UserDetailsScreen extends StatefulWidget {
 
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   final formKey = GlobalKey<FormState>();
-  late TextEditingController yearOfJoiningController;
   late TextEditingController yearOfGraduationController;
   late TextEditingController collegeController;
   late TextEditingController companyController;
@@ -45,15 +44,13 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    yearOfJoiningController = TextEditingController();
     yearOfGraduationController = TextEditingController();
     collegeController = TextEditingController();
     companyController = TextEditingController();
   }
 
   @override
-  void dispose() {
-    yearOfJoiningController.dispose();
+  void dispose() {;
     yearOfGraduationController.dispose();
     collegeController.dispose();
     companyController.dispose();
@@ -150,7 +147,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         'name': widget.name, // Passed from the previous screen
                         'email':
                             widget.email, // Passed from the previous screen
-                        'yearOfJoining': yearOfJoiningController.text,
                         'yearOfGraduation': yearOfGraduationController.text,
                         'course': selectedCourse,
                         'branch': selectedBranch,

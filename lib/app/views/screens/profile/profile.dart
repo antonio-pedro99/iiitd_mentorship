@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart' as Path;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -110,8 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .get();
 
         if (userProfile.exists) {
-          Map<String, dynamic> userData =
-              userProfile.data() as Map<String, dynamic>;
+          Map<String, dynamic> userData = userProfile.data() as Map<String, dynamic>;
 
           _nameController.text = userData['name'] ?? '';
           _emailController.text = userData['email'] ?? '';
@@ -119,9 +120,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _companyController.text = userData['company'] ?? 'Not available';
           _branchController.text = userData['branch'] ?? 'Not available';
           _courseController.text = userData['course'] ?? 'Not available';
-          _yearOfGraduationController.text =
-              userData['yearOfGraduation'] ?? 'Not available';
-
+          _yearOfGraduationController.text = userData['yearOfGraduation'] ?? 'Not available';
+          
+          // Set the profile image URL if available
+        if (userData.containsKey('photoUrl') && userData['photoUrl'] != null && userData['photoUrl'].toString().isNotEmpty) {
+          setState(() {
+            _profileImage = XFile(userData['photoUrl']);
+          });
+        }
+          
           bool isMentor = userData['isMentor'] ?? false;
 
           setState(() {
@@ -134,6 +141,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _uploadProfileImage() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null && _profileImage != null) {
+      try {
+        String fileName = Path.basename(_profileImage!.path);
+        firebase_storage.Reference firebaseStorageRef = 
+            firebase_storage.FirebaseStorage.instance.ref().child('profile_images/${user.uid}/$fileName');
+
+        firebase_storage.UploadTask uploadTask = firebaseStorageRef.putFile(File(_profileImage!.path));
+        await uploadTask;
+
+        // Once the image is uploaded, get the download URL
+        String downloadURL = await firebaseStorageRef.getDownloadURL();
+
+        // Update the Firestore user document with the new image URL
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'photoUrl': downloadURL,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile picture updated successfully')),
+        );
+      } catch (e) {
+        print('Error uploading image: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating profile picture')),
+        );
+      }
+    }
+  }
+
   Future<void> _pickImage() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -141,9 +179,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
           _profileImage = pickedFile;
         });
+
+      // After setting the profile image, upload it
+      await _uploadProfileImage();
       }
     } catch (e) {
       print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking image')),
+      );
     }
   }
 
@@ -195,10 +239,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             radius: 60, // Radius of the profile picture
                             backgroundImage: _profileImage != null
-                                ? FileImage(File(_profileImage!.path))
-                                    as ImageProvider<Object>
-                                : AssetImage('assets/profile_image.png')
-                                    as ImageProvider<Object>,
+                                ? (_profileImage!.path.startsWith('http') // Check if it's a URL
+                                  ? NetworkImage(_profileImage!.path) as ImageProvider<Object>
+                                  : FileImage(File(_profileImage!.path)) as ImageProvider<Object>)
+                                : AssetImage('assets/profile_image.png') as ImageProvider<Object>, // Default profile image             
                           ),
                           Positioned(
                             right:
