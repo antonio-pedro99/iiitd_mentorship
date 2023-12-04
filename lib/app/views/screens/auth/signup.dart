@@ -168,13 +168,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     rounded: true,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        BlocProvider.of<AuthBloc>(context).add(AuthSignUp(
-                          user: UserAuthSignUp(
-                            name: nameController.text,
-                            email: mailController.text,
-                            password: passwordController.text,
-                          ),
-                        ));
+                        if (mailController.text.endsWith("@iiitd.ac.in")) {
+                          BlocProvider.of<AuthBloc>(context).add(AuthSignUp(
+                            user: UserAuthSignUp(
+                              name: nameController.text,
+                              email: mailController.text,
+                              password: passwordController.text,
+                            ),
+                          ));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  "Please enter a valid IIITD email address"),
+                            ),
+                          );
+                        }
                       }
                     },
                     child: const Text("Sign Up")),

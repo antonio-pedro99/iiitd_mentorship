@@ -25,16 +25,25 @@ class MeetingService {
     // Stream of all meetings
     var allMeetingsStream = _firestore.collection('meetings').snapshots();
 
-    await for (var combinedSnapshot in Rx.combineLatest2(userMeetingsStream, allMeetingsStream, (userMeetings, allMeetings) {
-      return userMeetings.docs.map((doc) => Meeting.fromMap(doc.data(), doc.id)).toList()
+    await for (var combinedSnapshot in Rx.combineLatest2(
+        userMeetingsStream, allMeetingsStream, (userMeetings, allMeetings) {
+      return userMeetings.docs
+          .map((doc) => Meeting.fromMap(doc.data(), doc.id))
+          .toList()
         ..addAll(allMeetings.docs
-            .where((doc) => doc.data()['emailIDs'].toString().split(',').map((email) => email.trim()).contains(currentUserEmail))
+            .where((doc) => doc
+                .data()['emailIDs']
+                .toString()
+                .split(',')
+                .map((email) => email.trim())
+                .contains(currentUserEmail))
             .map((doc) => Meeting.fromMap(doc.data(), doc.id))
             .toList());
     })) {
       yield combinedSnapshot.toSet().toList(); // To remove duplicates
     }
   }
+
   static Future<void> deleteMeeting(String eventId) async {
     await _firestore.collection('meetings').doc(eventId).delete();
   }

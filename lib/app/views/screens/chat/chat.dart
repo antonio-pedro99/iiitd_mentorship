@@ -92,7 +92,6 @@ class _ChatScreenState extends State<ChatScreen> {
                           return InkResponse(
                             child: ConversationTile(
                               chat: chatRoom,
-                              
                             ),
                             onTap: () {
                               final otherUser = chatRoom.users.firstWhere(

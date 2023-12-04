@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/mentor.dart';
 import 'package:iiitd_mentorship/app/data/model/user.dart';
+import 'package:iiitd_mentorship/app/views/screens/profile/user_profile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/mentor_tile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/session_action.dart';
 import 'package:iiitd_mentorship/app/views/widgets/topic_tile.dart';
@@ -33,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return FirebaseFirestore.instance
         .collection("users")
         .where("isMentor", isEqualTo: true)
+
         //    .where("uid", isNotEqualTo: currentUser!.uid)
         .snapshots();
   }
@@ -170,7 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   })
                                   .toList()
                                   .where((element) {
-                                    return element.uid != currentUser!.uid;
+                                    return element.uid != currentUser!.uid &&
+                                        element.adminApproval!;
                                   })
                                   .toList();
 
@@ -184,8 +187,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.7,
-                                        child: MentorTile(
-                                          mentor: mentorsList[index],
+                                        child: InkResponse(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserProfileScreen(
+                                                          user: mentorsList[
+                                                              index])),
+                                            );
+                                          },
+                                          child: MentorTile(
+                                            mentor: mentorsList[index],
+                                          ),
                                         ));
                                   },
                                 ),

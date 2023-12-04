@@ -12,6 +12,7 @@ class DBUser {
   bool? isMentor;
   String? email;
   bool? isProfileComplete;
+  List<String>? topics; // Added topics property
 
   DBUser({
     this.college,
@@ -27,6 +28,7 @@ class DBUser {
     this.isMentor,
     this.email,
     this.isProfileComplete,
+    this.topics, // Added topics parameter in the constructor
   });
 
   DBUser.fromJson(Map<String, dynamic> json) {
@@ -43,6 +45,9 @@ class DBUser {
     isMentor = json['isMentor'];
     email = json['email'];
     isProfileComplete = json['isProfileComplete'];
+    topics = json['topics'] != null
+        ? List<String>.from(json['topics'])
+        : null; // Added topics assignment
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +65,7 @@ class DBUser {
     data['isMentor'] = isMentor;
     data['email'] = email;
     data['isProfileComplete'] = isProfileComplete;
+    data['topics'] = topics; // Added topics assignment
     return data;
   }
 }

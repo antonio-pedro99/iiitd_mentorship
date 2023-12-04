@@ -6,8 +6,9 @@ import 'package:iiitd_mentorship/app/views/widgets/custom_button.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 
 class ScheduleMeetingScreen extends StatefulWidget {
-  const ScheduleMeetingScreen({super.key});
-
+  const ScheduleMeetingScreen({super.key, this.title, this.email});
+  final String? title;
+  final String? email;
   @override
   State<ScheduleMeetingScreen> createState() => _ScheduleMeetingScreenState();
 }
@@ -20,6 +21,13 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
   TimeOfDay _startTime = TimeOfDay.now();
   TimeOfDay _endTime = TimeOfDay.now();
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController.text = widget.title ?? '';
+    _emailController.text = widget.email ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {

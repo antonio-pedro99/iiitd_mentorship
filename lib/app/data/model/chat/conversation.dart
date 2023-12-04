@@ -13,7 +13,6 @@ class ChatConversation {
   final bool? hasUnreadMessages;
   final List<dynamic> users;
   final int? unreadMessagesCount;
-  
 
   ChatConversation({
     this.id,

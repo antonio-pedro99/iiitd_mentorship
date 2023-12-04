@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iiitd_mentorship/app/data/model/chat/conversation.dart';
 import 'package:iiitd_mentorship/app/data/model/chat/message.dart';
 import 'package:iiitd_mentorship/app/data/model/user.dart';
@@ -28,6 +29,7 @@ class _ChatPageState extends State<ChatPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
   String currentChatId = "";
+  bool reported = false;
 
   @override
   void initState() {
@@ -112,7 +114,87 @@ class _ChatPageState extends State<ChatPage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.flag),
-              onPressed: () {},
+              onPressed: () {
+                // show dialog with a list of reason to report the chat
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Report Chat'),
+                      content: reported == false
+                          ? Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  title: const Text('Inappropriate Content'),
+                                  onTap: () {
+                                    Navigator.pop(context, 'Inappropriate');
+                                  },
+                                ),
+                                ListTile(
+                                  title: const Text('Spam'),
+                                  onTap: () {
+                                    Navigator.pop(context, 'Spam');
+                                  },
+                                ),
+                                // abusive language
+                                ListTile(
+                                  title: const Text('Abusive Language'),
+                                  onTap: () {
+                                    Navigator.pop(context, 'Abusive');
+                                  },
+                                ),
+                                ListTile(
+                                  title: const Text('Harassment'),
+                                  onTap: () {
+                                    Navigator.pop(context, 'Harassment');
+                                  },
+                                ),
+                                ListTile(
+                                  title: const Text('Other'),
+                                  onTap: () {
+                                    Navigator.pop(context, 'Other');
+                                  },
+                                ),
+                              ],
+                            )
+                          : const SizedBox(
+                              height: 100,
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.check_circle_outline,
+                                        color: Colors.green),
+                                    Text(
+                                        'You have reported this chat.\nWe will look into it.'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                    );
+                  },
+                ).then((value) {
+                  if (value != null) {
+                    // add report to database
+                    db.collection('reported_users').add({
+                      'reported': currentChatId,
+                      'reporter': currentUser!.uid,
+                      'reason': value,
+                      'date': Timestamp.now(),
+                    }).then((value) {
+                      setState(() {
+                        reported = true;
+                      });
+                    }).onError((error, stackTrace) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(error.toString()),
+                        ),
+                      );
+                    });
+                  }
+                });
+              },
             ),
           ],
         ),
@@ -186,10 +268,15 @@ class _ChatPageState extends State<ChatPage> {
     //align message to left for received message and right for sent ones
     var isMe = message.senderId == currentUser!.uid;
 
-    return MessageTile(
-      isMe: isMe,
-      message: message.message,
-      time: DateFormat('kk:mm').format(dateTime),
+    return InkWell(
+      onLongPress: () {
+        Clipboard.setData(ClipboardData(text: message.message));
+      },
+      child: MessageTile(
+        isMe: isMe,
+        message: message.message,
+        time: DateFormat('kk:mm').format(dateTime),
+      ),
     );
   }
 
@@ -213,9 +300,12 @@ class _ChatPageState extends State<ChatPage> {
 
             // send Icon button
             IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: sendMessage,
-            ),
+                icon: const Icon(Icons.send),
+                onPressed: () {
+                  if (_messageController.text.isNotEmpty) {
+                    sendMessage();
+                  }
+                }),
           ],
         ),
       ),

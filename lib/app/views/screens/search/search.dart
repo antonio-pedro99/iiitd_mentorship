@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/user.dart';
 import 'package:iiitd_mentorship/app/views/screens/chat/chat_page.dart';
+import 'package:iiitd_mentorship/app/views/screens/profile/user_profile.dart';
 import 'package:iiitd_mentorship/app/views/screens/search/widgets/mentor_result_tile.dart';
 import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 
@@ -30,6 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return FirebaseFirestore.instance
         .collection('users')
         .where('name', isGreaterThanOrEqualTo: search)
+        .where('adminApproval', isEqualTo: true)
         .get()
         .asStream();
   }
@@ -138,6 +140,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                           builder: (context) => ChatPage(
+                                              receiverId:
+                                                  mentorsFiltered[index].uid,
                                               receiverUser:
                                                   mentorsFiltered[index]),
                                         ),
@@ -145,17 +149,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                     } else {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => Scaffold(
-                                            appBar: AppBar(
-                                              title: Text(
-                                                  mentorsFiltered[index].name!),
-                                            ),
-                                            body: Center(
-                                              child: Text(
-                                                  mentorsFiltered[index].name!),
-                                            ),
-                                          ),
-                                        ),
+                                            builder: (context) =>
+                                                UserProfileScreen(
+                                                    user: mentorsFiltered[
+                                                        index])),
                                       );
                                     }
                                   },
