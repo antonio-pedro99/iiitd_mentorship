@@ -43,6 +43,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     'PhD': ['CB', 'CSE', 'ECE', 'HCD', 'Maths', 'SSH'],
   };
 
+  final List<String> topics = [];
+  final List<String> selectedTopics = [];
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +53,16 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     yearOfGraduationController = TextEditingController();
     collegeController = TextEditingController();
     companyController = TextEditingController();
+    loadTopics();
+  }
+
+  loadTopics() async {
+    final dbTopicsCollection =
+        await FirebaseFirestore.instance.collection('topics').get();
+
+    dbTopicsCollection.docs.forEach((element) {
+      topics.add(element.data()['name']);
+    });
   }
 
   @override
@@ -80,6 +93,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         child: Form(
           key: formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomTextBox(
                 controller: yearOfGraduationController,
@@ -145,6 +160,27 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   hintText: 'Company',
                   validationMessage: 'Please enter the company name',
                 ),
+                // list of topics of interests in selectable chips
+
+                const SizedBox(height: 20),
+                const Text("Select your topics of interest"),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 8.0,
+                  children: topics.map((topic) {
+                    bool isSelected = selectedTopics.contains(topic);
+                    return FilterChip(
+                      label: Text(topic),
+                      selected: isSelected,
+                      showCheckmark: true,
+                      onSelected: (bool value) {
+                        setState(() {
+                          selectedTopics.add(topic);
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
               ],
               const SizedBox(height: 20),
               CustomButton(
@@ -161,6 +197,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         isMentor: isMentor,
                         college: collegeController.text,
                         company: companyController.text,
+                        topics: selectedTopics,
                         adminApproval: false,
                         isProfileComplete: true);
 
@@ -173,7 +210,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                         course: selectedCourse,
                         branch: selectedBranch,
                         isMentor: isMentor,
-                        adminApproval: false,
+                        topics: [],
+                        adminApproval: true,
                         isProfileComplete: true);
 
                     if (isMentor) {

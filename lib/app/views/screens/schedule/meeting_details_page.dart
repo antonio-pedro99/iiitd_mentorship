@@ -14,38 +14,38 @@ class MeetingDetailsPage extends StatelessWidget {
         title: const Text('Meeting Details'),
         elevation: 0,
       ),
-        body: FutureBuilder<String>(
-            future: MeetingService.getUserName(meeting.userId),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (!snapshot.hasData || snapshot.data == 'Unknown User') {
-                return Center(child: Text('No Creator Information Available'));
-              }
-              return SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      _creatorNameCard(context, snapshot.data!),
-              meetingDetailCard(context, Icons.title, 'Title', meeting.title),
-              meetingDetailCard(context, Icons.description, 'Description',
-                  meeting.description),
-              meetingDetailCard(
-                  context, Icons.email, 'Invitees', meeting.emailIDs),
-              meetingDetailCard(context, Icons.calendar_today, 'Start',
-                  meeting.from.toString()),
-              meetingDetailCard(
-                  context, Icons.calendar_today, 'End', meeting.to.toString()),
-              const SizedBox(height: 20),
-              cancelMeetingButton(context),
-            ],
-          ),
-        ),
-      );
-    }
-      ),
+      body: FutureBuilder<String>(
+          future: MeetingService.getUserName(meeting.userId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data == 'Unknown User') {
+              return Center(child: Text('No Creator Information Available'));
+            }
+            return SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    _creatorNameCard(context, snapshot.data!),
+                    meetingDetailCard(
+                        context, Icons.title, 'Title', meeting.title),
+                    meetingDetailCard(context, Icons.description, 'Description',
+                        meeting.description),
+                    meetingDetailCard(
+                        context, Icons.email, 'Invitees', meeting.emailIDs),
+                    meetingDetailCard(context, Icons.calendar_today, 'Start',
+                        meeting.from.toString()),
+                    meetingDetailCard(context, Icons.calendar_today, 'End',
+                        meeting.to.toString()),
+                    const SizedBox(height: 20),
+                    cancelMeetingButton(context),
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
 

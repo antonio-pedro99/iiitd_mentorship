@@ -134,7 +134,7 @@ class _OTPScreenState extends State<OTPScreen> {
       child: TextFormField(
         controller: controller,
         textAlign: TextAlign.center,
-        canRequestFocus: true,
+        //  canRequestFocus: true,
         keyboardType: TextInputType.number,
         style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
         onEditingComplete: () {
