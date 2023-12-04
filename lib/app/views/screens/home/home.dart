@@ -172,7 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   })
                                   .toList()
                                   .where((element) {
-                                    return element.uid != currentUser!.uid && element.adminApproval!;
+                                    return element.uid != currentUser!.uid &&
+                                        element.adminApproval!;
                                   })
                                   .toList();
 

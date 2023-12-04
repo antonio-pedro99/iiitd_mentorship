@@ -10,7 +10,6 @@ import 'package:iiitd_mentorship/app/views/widgets/custom_textbox.dart';
 import 'package:iiitd_mentorship/app/views/widgets/message_tile.dart';
 import 'package:intl/intl.dart';
 
-
 class ChatPage extends StatefulWidget {
   const ChatPage(
       {super.key, this.chatConversation, this.receiverUser, this.receiverId});
@@ -270,7 +269,7 @@ class _ChatPageState extends State<ChatPage> {
     var isMe = message.senderId == currentUser!.uid;
 
     return InkWell(
-      onLongPress: (){
+      onLongPress: () {
         Clipboard.setData(ClipboardData(text: message.message));
       },
       child: MessageTile(
@@ -301,13 +300,12 @@ class _ChatPageState extends State<ChatPage> {
 
             // send Icon button
             IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: (){
-                if (_messageController.text.isNotEmpty) {
-                  sendMessage();
-                }
-              }
-            ),
+                icon: const Icon(Icons.send),
+                onPressed: () {
+                  if (_messageController.text.isNotEmpty) {
+                    sendMessage();
+                  }
+                }),
           ],
         ),
       ),
