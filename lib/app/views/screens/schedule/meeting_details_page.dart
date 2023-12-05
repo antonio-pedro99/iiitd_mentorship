@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iiitd_mentorship/app/data/model/meeting.dart';
 import 'package:iiitd_mentorship/app/data/services/meeting.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class MeetingDetailsPage extends StatelessWidget {
   final Meeting meeting;
@@ -39,7 +41,10 @@ class MeetingDetailsPage extends StatelessWidget {
                         meeting.from.toString()),
                     meetingDetailCard(context, Icons.calendar_today, 'End',
                         meeting.to.toString()),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 5),
+                    sideNote(), // Add the side note here
+                    startMeetingButton(context), // Add the start meeting button here
+                    const SizedBox(height: 15),
                     cancelMeetingButton(context),
                   ],
                 ),
@@ -109,6 +114,55 @@ class MeetingDetailsPage extends StatelessWidget {
       ),
     );
   }
+
+  Widget startMeetingButton(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => _startMeeting(context),
+      icon: const Icon(Icons.video_call, color: Colors.white), // video call icon
+      label: const Text('Start Google Meet', style: TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green, // Modern green color
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        textStyle: const TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
+  Widget sideNote() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Text(
+        'Please use only your IIITD email to join the Google Meet',
+        style: TextStyle(
+          fontSize: 14,
+          fontStyle: FontStyle.italic,
+          color: Colors.grey[600], // Adjust color to match your design
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+
+
+  void _startMeeting(BuildContext context) async {
+    // Replace spaces and special characters in the meeting title with a suitable character like an underscore
+    String formattedTitle = meeting.title.replaceAll(RegExp(r'\s+'), '_');
+
+    // Construct the Google Meet link with the formatted title
+    String meetLink = "https://meet.google.com/lookup/$formattedTitle";
+
+    if (await canLaunch(meetLink)) {
+      await launch(meetLink);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch the meeting')),
+      );
+    }
+  }
+
+
 
   void _cancelMeeting(BuildContext context) {
     // Implementation of the cancel meeting functionality
