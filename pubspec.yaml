@@ -36,6 +36,7 @@ dependencies:
   mockito: ^5.4.3
   build_runner: ^2.4.6
   rxdart: ^0.27.7
+  url_launcher: ^6.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
