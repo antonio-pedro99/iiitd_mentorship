@@ -263,6 +263,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                   return a["from"].toDate().compareTo(b["from"].toDate());
                                 });
 
+                                // Check for no upcoming sessions
+                                if (sessionsList.isEmpty) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start, // Aligns the text to the start of the column
+                                    children: [
+                                      SizedBox(height: 50), // Adjust this value to control the position
+                                      Center(
+                                        child: Text(
+                                          'No upcoming sessions',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+
                                 return ListView.builder(
                                   itemCount: sessionsList.length,
                                   shrinkWrap: true,
