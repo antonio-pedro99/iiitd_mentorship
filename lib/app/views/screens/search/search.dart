@@ -24,9 +24,19 @@ class _SearchScreenState extends State<SearchScreen> {
   final List<DBUser> mentorsFiltered = [];
 
   bool isSearching = false;
+  bool isSorted = false;
+  
+  capitalize(String s) {
+    if (s.isEmpty) {
+      return s;
+    }
+    return s[0].toUpperCase() + s.substring(1);
+  }
 
-  firestoreSearch(String? search) {
+  firestoreSearchByName(String search) {
     mentorsFiltered.clear();
+    
+    capitalize(search);
 
     return FirebaseFirestore.instance
         .collection('users')
@@ -34,6 +44,71 @@ class _SearchScreenState extends State<SearchScreen> {
         .where('adminApproval', isEqualTo: true)
         .get()
         .asStream();
+  }
+
+  // search by branch
+  firestoreSearchByBranch(String search) {
+    
+    mentorsFiltered.clear();
+
+    capitalize(search);
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('branch', isEqualTo: search)
+        .where('adminApproval', isEqualTo: true)
+        .get()
+        .asStream();
+  }
+
+
+  // search by company
+  firestoreSearchByCompany(String search) {
+    
+    mentorsFiltered.clear();
+
+    capitalize(search);
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('company', isEqualTo: search)
+        .where('adminApproval', isEqualTo: true)
+        .get()
+        .asStream();
+  }
+
+  // search by topic
+  firestoreSearchByTopic(String search) {
+    
+    mentorsFiltered.clear();
+
+    capitalize(search);
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('topics', arrayContains: search)
+        .where('adminApproval', isEqualTo: true)
+        .get()
+        .asStream();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+     setState(() {
+                isSearching = !isSearching;
+              });
+              firestoreSearchByName("").listen((event) {
+                setState(() {
+                  mentorsFiltered.clear();
+                  event.docs.forEach((element) {
+                    final mentor = DBUser.fromJson(element.data());
+                    if (mentor.uid != currentUser!.uid) {
+                      mentorsFiltered.add(mentor);
+                    }
+                  });
+                });
+              });
   }
 
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -55,7 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
               setState(() {
                 isSearching = true;
               });
-              firestoreSearch(p0).listen((event) {
+              firestoreSearchByName(p0).listen((event) {
                 setState(() {
                   mentorsFiltered.clear();
                   event.docs.forEach((element) {
@@ -67,43 +142,94 @@ class _SearchScreenState extends State<SearchScreen> {
                 });
               });
             },
-            // onSubmitted: (p0) {
-            //   setState(() {
-            //     filters.add(Chip(
-            //       label: Text(p0, key: ValueKey(p0)),
-            //       deleteIcon: const Icon(Icons.close),
-            //       onDeleted: () {
-            //         setState(() {
-            //           filters.removeWhere(
-            //               (element) => element.label.key == ValueKey(p0));
-            //           searchEditingController.clear();
-            //         });
-            //       },
-            //     ));
-            //   });
-            // }
           ),
           toolbarHeight: kToolbarHeight + 10,
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  // open a modal sheet to select filters
+                  const filterOptions = [
+                    "Branch",
+                    "Company",
+                    "Topic",
+                  ];
+
+                  showBottomSheet(context: context, builder: (context){
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: ListView.builder(
+                        itemCount: filterOptions.length,
+                        itemBuilder: (context, index){
+                          return ListTile(
+                            title: Text(filterOptions[index]),
+                            onTap: (){
+                              Navigator.pop(context);
+                              showDialog(context: context, builder: (context){
+                                return AlertDialog(
+                                  title: Text("Search by ${filterOptions[index]}"),
+                                  content: CustomTextBox(
+                                    controller: searchEditingController,
+                                    hintText: "Search by ${filterOptions[index]}",
+                                    prefixIcon: const Icon(Icons.search),
+                                    onSubmitted: (p0) {
+                                      setState(() {
+                                        isSearching = true;
+                                      });
+                                      if(filterOptions[index] == "Branch"){
+                                        firestoreSearchByBranch(p0).listen((event) {
+                                          setState(() {
+                                            mentorsFiltered.clear();
+                                            event.docs.forEach((element) {
+                                              final mentor = DBUser.fromJson(element.data());
+                                              if (mentor.uid != currentUser!.uid) {
+                                                mentorsFiltered.add(mentor);
+                                              }
+                                            });
+                                          });
+                                        });
+                                      }
+                                      else if(filterOptions[index] == "Company"){
+                                        firestoreSearchByCompany(p0).listen((event) {
+                                          setState(() {
+                                            mentorsFiltered.clear();
+                                            event.docs.forEach((element) {
+                                              final mentor = DBUser.fromJson(element.data());
+                                              if (mentor.uid != currentUser!.uid) {
+                                                mentorsFiltered.add(mentor);
+                                              }
+                                            });
+                                          });
+                                        });
+                                      }
+                                      else if(filterOptions[index] == "Topic"){
+                                        firestoreSearchByTopic(p0).listen((event) {
+                                          setState(() {
+                                            mentorsFiltered.clear();
+                                            event.docs.forEach((element) {
+                                              final mentor = DBUser.fromJson(element.data());
+                                              if (mentor.uid != currentUser!.uid) {
+                                                mentorsFiltered.add(mentor);
+                                              }
+                                            });
+                                          });
+                                        });
+                                      }
+                                    },
+                                  ),
+                                );
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  });
+                },
                 icon: const Icon(
                   Icons.filter_list,
                   color: Colors.grey,
                 )),
           ],
-          // bottom: filters.isNotEmpty
-          //     ? PreferredSize(
-          //         preferredSize: const Size.fromHeight(50),
-          //         child: Padding(
-          //           padding: const EdgeInsets.all(8.0),
-          //           child: Wrap(
-          //             children: filters,
-          //           ),
-          //         ))
-          //     : const PreferredSize(
-          //         preferredSize: Size.fromHeight(20),
-          //         child: Text("No filters applied yet")),
         ),
         SliverPadding(
           padding: const EdgeInsets.all(8.0),
@@ -120,11 +246,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   IconButton(
                       onPressed: () {
                         setState(() {
+                         
                           mentorsFiltered
                               .sort((a, b) => a.name!.compareTo(b.name!));
+                          isSorted = !isSorted;
                         });
                       },
-                      icon: const Icon(Icons.sort_by_alpha))
+                      icon: isSorted? const Icon(Icons.sort_by_alpha, color: Colors.grey,) : const Icon(Icons.sort_by_alpha, color: Colors.black,)),
                 ],
               ),
               isSearching

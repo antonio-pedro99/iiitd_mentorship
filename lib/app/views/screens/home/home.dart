@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       "Your account is not approved yet. Please wait for admin approval.",
                                       style: TextStyle(
                                           color: Colors.yellow[900],
-                                          fontWeight: FontWeight.w500),
+                                          fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ],
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: 10,
                       ),
                       const Text("Quick shortcuts",
-                          style: TextStyle(fontWeight: FontWeight.w500)),
+                          style: TextStyle(fontWeight: FontWeight.w700)),
                       const SizedBox(
                         height: 10,
                       ),
@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ? "Others Mentors"
                                   : "Recommended Mentors",
                               style:
-                                  const TextStyle(fontWeight: FontWeight.w500)),
+                                  const TextStyle(fontWeight: FontWeight.w700)),
                           TextButton(
                             onPressed: () => Navigator.pushNamed(context, "/search"),
                             child: Text("See All",
@@ -174,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           }
                           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                            return Center(child: Text('No mentors available'));
+                            return const Center(child: Text('No mentors available'));
                           }
 
                           final mentorsData = snapshot.data!;
@@ -219,9 +219,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ? "Upcoming sessions"
                                   : "Topics of Interest",
                               style:
-                                  const TextStyle(fontWeight: FontWeight.w500)),
+                                  const TextStyle(fontWeight: FontWeight.w700)),
                           TextButton(
-                            onPressed: () => Navigator.pushNamed(context, "/home/schedule"),
+                            onPressed: () => Navigator.pushNamed(context, "/search"),
                             child: Text("See All",
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor)),
@@ -265,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                 // Check for no upcoming sessions
                                 if (sessionsList.isEmpty) {
-                                  return Column(
+                                  return const Column(
                                     mainAxisAlignment: MainAxisAlignment.start, // Aligns the text to the start of the column
                                     children: [
                                       SizedBox(height: 50), // Adjust this value to control the position
@@ -274,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           'No upcoming sessions',
                                           style: TextStyle(
                                             fontSize: 16.0,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w700,
                                             color: Colors.grey,
                                           ),
                                         ),
@@ -298,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       child: Card(
                                         elevation: 0.5,
                                         child: ListTile(
-                                          title: Text(meeting.title, style: const TextStyle(fontWeight: FontWeight.w500)),
+                                          title: Text(meeting.title, style: const TextStyle(fontWeight: FontWeight.w700)),
                                           subtitle: Text(meeting.description, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(fontSize: 11.0, color: Colors.grey)),
                                           onTap: () {
                                             Navigator.of(context).push(
