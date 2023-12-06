@@ -25,7 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   bool isSearching = false;
   bool isSorted = false;
-  
+
   capitalize(String s) {
     if (s.isEmpty) {
       return s;
@@ -35,7 +35,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   firestoreSearchByName(String search) {
     mentorsFiltered.clear();
-    
+
     capitalize(search);
 
     return FirebaseFirestore.instance
@@ -48,7 +48,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   // search by branch
   firestoreSearchByBranch(String search) {
-    
     mentorsFiltered.clear();
 
     capitalize(search);
@@ -61,10 +60,8 @@ class _SearchScreenState extends State<SearchScreen> {
         .asStream();
   }
 
-
   // search by company
   firestoreSearchByCompany(String search) {
-    
     mentorsFiltered.clear();
 
     capitalize(search);
@@ -79,7 +76,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   // search by topic
   firestoreSearchByTopic(String search) {
-    
     mentorsFiltered.clear();
 
     capitalize(search);
@@ -95,20 +91,22 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-     setState(() {
-                isSearching = !isSearching;
-              });
-              firestoreSearchByName("").listen((event) {
-                setState(() {
-                  mentorsFiltered.clear();
-                  event.docs.forEach((element) {
-                    final mentor = DBUser.fromJson(element.data());
-                    if (mentor.uid != currentUser!.uid) {
-                      mentorsFiltered.add(mentor);
-                    }
-                  });
-                });
-              });
+    setState(() {
+      isSearching = !isSearching;
+    });
+    firestoreSearchByName("").listen((event) {
+     if (mounted){
+       setState(() {
+        mentorsFiltered.clear();
+        event.docs.forEach((element) {
+          final mentor = DBUser.fromJson(element.data());
+          if (mentor.uid != currentUser!.uid) {
+            mentorsFiltered.add(mentor);
+          }
+        });
+      });
+     }
+    });
   }
 
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -154,76 +152,102 @@ class _SearchScreenState extends State<SearchScreen> {
                     "Topic",
                   ];
 
-                  showBottomSheet(context: context, builder: (context){
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      child: ListView.builder(
-                        itemCount: filterOptions.length,
-                        itemBuilder: (context, index){
-                          return ListTile(
-                            title: Text(filterOptions[index]),
-                            onTap: (){
-                              Navigator.pop(context);
-                              showDialog(context: context, builder: (context){
-                                return AlertDialog(
-                                  title: Text("Search by ${filterOptions[index]}"),
-                                  content: CustomTextBox(
-                                    controller: searchEditingController,
-                                    hintText: "Search by ${filterOptions[index]}",
-                                    prefixIcon: const Icon(Icons.search),
-                                    onSubmitted: (p0) {
-                                      setState(() {
-                                        isSearching = true;
+                  showBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          child: ListView.builder(
+                            itemCount: filterOptions.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(filterOptions[index]),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              "Search by ${filterOptions[index]}"),
+                                          content: CustomTextBox(
+                                            controller: searchEditingController,
+                                            hintText:
+                                                "Search by ${filterOptions[index]}",
+                                            prefixIcon:
+                                                const Icon(Icons.search),
+                                            onSubmitted: (p0) {
+                                              setState(() {
+                                                isSearching = true;
+                                              });
+                                              if (filterOptions[index] ==
+                                                  "Branch") {
+                                                firestoreSearchByBranch(p0)
+                                                    .listen((event) {
+                                                  setState(() {
+                                                    mentorsFiltered.clear();
+                                                    event.docs
+                                                        .forEach((element) {
+                                                      final mentor =
+                                                          DBUser.fromJson(
+                                                              element.data());
+                                                      if (mentor.uid !=
+                                                          currentUser!.uid) {
+                                                        mentorsFiltered
+                                                            .add(mentor);
+                                                      }
+                                                    });
+                                                  });
+                                                });
+                                              } else if (filterOptions[index] ==
+                                                  "Company") {
+                                                firestoreSearchByCompany(p0)
+                                                    .listen((event) {
+                                                  setState(() {
+                                                    mentorsFiltered.clear();
+                                                    event.docs
+                                                        .forEach((element) {
+                                                      final mentor =
+                                                          DBUser.fromJson(
+                                                              element.data());
+                                                      if (mentor.uid !=
+                                                          currentUser!.uid) {
+                                                        mentorsFiltered
+                                                            .add(mentor);
+                                                      }
+                                                    });
+                                                  });
+                                                });
+                                              } else if (filterOptions[index] ==
+                                                  "Topic") {
+                                                firestoreSearchByTopic(p0)
+                                                    .listen((event) {
+                                                  setState(() {
+                                                    mentorsFiltered.clear();
+                                                    event.docs
+                                                        .forEach((element) {
+                                                      final mentor =
+                                                          DBUser.fromJson(
+                                                              element.data());
+                                                      if (mentor.uid !=
+                                                          currentUser!.uid) {
+                                                        mentorsFiltered
+                                                            .add(mentor);
+                                                      }
+                                                    });
+                                                  });
+                                                });
+                                              }
+                                            },
+                                          ),
+                                        );
                                       });
-                                      if(filterOptions[index] == "Branch"){
-                                        firestoreSearchByBranch(p0).listen((event) {
-                                          setState(() {
-                                            mentorsFiltered.clear();
-                                            event.docs.forEach((element) {
-                                              final mentor = DBUser.fromJson(element.data());
-                                              if (mentor.uid != currentUser!.uid) {
-                                                mentorsFiltered.add(mentor);
-                                              }
-                                            });
-                                          });
-                                        });
-                                      }
-                                      else if(filterOptions[index] == "Company"){
-                                        firestoreSearchByCompany(p0).listen((event) {
-                                          setState(() {
-                                            mentorsFiltered.clear();
-                                            event.docs.forEach((element) {
-                                              final mentor = DBUser.fromJson(element.data());
-                                              if (mentor.uid != currentUser!.uid) {
-                                                mentorsFiltered.add(mentor);
-                                              }
-                                            });
-                                          });
-                                        });
-                                      }
-                                      else if(filterOptions[index] == "Topic"){
-                                        firestoreSearchByTopic(p0).listen((event) {
-                                          setState(() {
-                                            mentorsFiltered.clear();
-                                            event.docs.forEach((element) {
-                                              final mentor = DBUser.fromJson(element.data());
-                                              if (mentor.uid != currentUser!.uid) {
-                                                mentorsFiltered.add(mentor);
-                                              }
-                                            });
-                                          });
-                                        });
-                                      }
-                                    },
-                                  ),
-                                );
-                              });
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-                    );
-                  });
+                          ),
+                        );
+                      });
                 },
                 icon: const Icon(
                   Icons.filter_list,
@@ -246,13 +270,20 @@ class _SearchScreenState extends State<SearchScreen> {
                   IconButton(
                       onPressed: () {
                         setState(() {
-                         
                           mentorsFiltered
                               .sort((a, b) => a.name!.compareTo(b.name!));
                           isSorted = !isSorted;
                         });
                       },
-                      icon: isSorted? const Icon(Icons.sort_by_alpha, color: Colors.grey,) : const Icon(Icons.sort_by_alpha, color: Colors.black,)),
+                      icon: isSorted
+                          ? const Icon(
+                              Icons.sort_by_alpha,
+                              color: Colors.grey,
+                            )
+                          : const Icon(
+                              Icons.sort_by_alpha,
+                              color: Colors.black,
+                            )),
                 ],
               ),
               isSearching

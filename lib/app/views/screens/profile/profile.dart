@@ -112,7 +112,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .get();
 
         if (userProfile.exists) {
-          Map<String, dynamic> userData = userProfile.data() as Map<String, dynamic>;
+          Map<String, dynamic> userData =
+              userProfile.data() as Map<String, dynamic>;
 
           _nameController.text = userData['name'] ?? '';
           _emailController.text = userData['email'] ?? '';
@@ -120,15 +121,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _companyController.text = userData['company'] ?? 'Not available';
           _branchController.text = userData['branch'] ?? 'Not available';
           _courseController.text = userData['course'] ?? 'Not available';
-          _yearOfGraduationController.text = userData['yearOfGraduation'] ?? 'Not available';
-          
+          _yearOfGraduationController.text =
+              userData['yearOfGraduation'] ?? 'Not available';
+
           // Set the profile image URL if available
-        if (userData.containsKey('photoUrl') && userData['photoUrl'] != null && userData['photoUrl'].toString().isNotEmpty) {
-          setState(() {
-            _profileImage = XFile(userData['photoUrl']);
-          });
-        }
-          
+          if (userData.containsKey('photoUrl') &&
+              userData['photoUrl'] != null &&
+              userData['photoUrl'].toString().isNotEmpty) {
+            setState(() {
+              _profileImage = XFile(userData['photoUrl']);
+            });
+          }
+
           bool isMentor = userData['isMentor'] ?? false;
 
           setState(() {
@@ -146,17 +150,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (user != null && _profileImage != null) {
       try {
         String fileName = Path.basename(_profileImage!.path);
-        firebase_storage.Reference firebaseStorageRef = 
-            firebase_storage.FirebaseStorage.instance.ref().child('profile_images/${user.uid}/$fileName');
+        firebase_storage.Reference firebaseStorageRef = firebase_storage
+            .FirebaseStorage.instance
+            .ref()
+            .child('profile_images/${user.uid}/$fileName');
 
-        firebase_storage.UploadTask uploadTask = firebaseStorageRef.putFile(File(_profileImage!.path));
+        firebase_storage.UploadTask uploadTask =
+            firebaseStorageRef.putFile(File(_profileImage!.path));
         await uploadTask;
 
         // Once the image is uploaded, get the download URL
         String downloadURL = await firebaseStorageRef.getDownloadURL();
 
         // Update the Firestore user document with the new image URL
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
           'photoUrl': downloadURL,
         });
 
@@ -180,8 +190,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _profileImage = pickedFile;
         });
 
-      // After setting the profile image, upload it
-      await _uploadProfileImage();
+        // After setting the profile image, upload it
+        await _uploadProfileImage();
       }
     } catch (e) {
       print('Error picking image: $e');
@@ -218,186 +228,190 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }, builder: (context, state) {
           Widget widget;
 
-              if (state is AuthLoading) {
-                widget = const Center(
-                  child: Column(
+          if (state is AuthLoading) {
+            widget = const Center(
+              child: Column(
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 10),
+                  Text('Signing out...'),
+                ],
+              ),
+            );
+          } else if (state is Authenticated || state is AuthInitial) {
+            widget = Form(
+              key: _formKey,
+              child: ListView(
+                // Used ListView for scrollable content
+                children: [
+                  Stack(
+                    clipBehavior: Clip
+                        .none, // Allow overflowing of children outside the stack
+                    alignment: Alignment
+                        .center, // Align children to the center of the stack
                     children: [
-                      const CircularProgressIndicator(),
-                      const SizedBox(height: 10),
-                      Text('Signing out...'),
+                      CircleAvatar(
+                        radius: 60, // Radius of the profile picture
+                        backgroundImage: _profileImage != null
+                            ? (_profileImage!.path
+                                    .startsWith('http') // Check if it's a URL
+                                ? NetworkImage(_profileImage!.path)
+                                    as ImageProvider<Object>
+                                : FileImage(File(_profileImage!.path))
+                                    as ImageProvider<Object>)
+                            : AssetImage('assets/profile_image.png')
+                                as ImageProvider<
+                                    Object>, // Default profile image
+                      ),
+                      Positioned(
+                        right:
+                            45, // Position the edit icon to the right of the CircleAvatar
+                        bottom: 30,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255,
+                                255), // White background for visibility
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.edit,
+                                color: Theme.of(context).primaryColor),
+                            onPressed: _pickImage, // Image picking function
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                );
-              } else if (state is Authenticated || state is AuthInitial) {
-                widget = Form(
-                  key: _formKey,
-                  child: ListView(
-                    // Used ListView for scrollable content
-                    children: [
-                      Stack(
-                        clipBehavior: Clip
-                            .none, // Allow overflowing of children outside the stack
-                        alignment: Alignment
-                            .center, // Align children to the center of the stack
-                        children: [
-                          CircleAvatar(
-                            radius: 60, // Radius of the profile picture
-                            backgroundImage: _profileImage != null
-                                ? (_profileImage!.path.startsWith('http') // Check if it's a URL
-                                  ? NetworkImage(_profileImage!.path) as ImageProvider<Object>
-                                  : FileImage(File(_profileImage!.path)) as ImageProvider<Object>)
-                                : AssetImage('assets/profile_image.png') as ImageProvider<Object>, // Default profile image             
-                          ),
-                          Positioned(
-                            right:
-                                45, // Position the edit icon to the right of the CircleAvatar
-                            bottom: 30,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 255,
-                                    255), // White background for visibility
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                icon: Icon(Icons.edit,
-                                    color: Theme.of(context).primaryColor),
-                                onPressed: _pickImage, // Image picking function
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: 'Name',
-                          prefixIcon: Icon(Icons.person), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                          // suffixIcon: _isEditingName
-                          //     ? null
-                          //     : IconButton(
-                          //         icon: Icon(Icons.edit),
-                          //         onPressed: _toggleEditingName,
-                          //       ),
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                        // validator: (value) {
-                        //   if (value == null || value.trim().isEmpty) {
-                        //     return 'Name cannot be empty';
-                        //   }
-                        //   return null;
-                        // },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 24),
-                      TextFormField(
-                        controller: _roleController,
-                        decoration: InputDecoration(
-                          labelText: 'Role',
-                          prefixIcon: Icon(Icons.badge), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _courseController,
-                        decoration: InputDecoration(
-                          labelText: 'Course',
-                          prefixIcon: Icon(Icons.school), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _branchController,
-                        decoration: InputDecoration(
-                          labelText: 'Branch',
-                          prefixIcon: Icon(Icons.domain_add), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _yearOfGraduationController,
-                        decoration: InputDecoration(
-                          labelText: 'Year of Graduation',
-                          prefixIcon: Icon(Icons.event), // Added icon
-                          filled: true, // Filled text box
-                          fillColor: Colors.grey[200], // Fill color
-                        ),
-                        readOnly: true,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      if (_roleController.text != 'Mentee') ...[
-                        SizedBox(height: 20),
-                        TextFormField(
-                          controller: _collegeController,
-                          decoration: InputDecoration(
-                            labelText: 'College',
-                            prefixIcon: Icon(Icons.history_edu), // Added icon
-                            filled: true, // Filled text box
-                            fillColor: Colors.grey[200], // Fill color
-                            suffixIcon: _isEditingCollege
-                                ? null
-                                : IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: _toggleEditingCollege,
-                                  ),
-                          ),
-                          readOnly: false,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        SizedBox(height: 20),
-                        TextFormField(
-                          controller: _companyController,
-                          decoration: InputDecoration(
-                            labelText: 'Company',
-                            prefixIcon:
-                                Icon(Icons.business_center), // Added icon
-                            filled: true, // Filled text box
-                            fillColor: Colors.grey[200], // Fill color
-                            suffixIcon: _isEditingCollege
-                                ? null
-                                : IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: _toggleEditingCompany,
-                                  ),
-                          ),
-                          readOnly: false,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ]
-                    ],
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      prefixIcon: Icon(Icons.person), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                      // suffixIcon: _isEditingName
+                      //     ? null
+                      //     : IconButton(
+                      //         icon: Icon(Icons.edit),
+                      //         onPressed: _toggleEditingName,
+                      //       ),
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                    // validator: (value) {
+                    //   if (value == null || value.trim().isEmpty) {
+                    //     return 'Name cannot be empty';
+                    //   }
+                    //   return null;
+                    // },
                   ),
-                );
-              } else {
-                widget = const Center(
-                  child: Text('Error fetching user data'),
-                );
-              }
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 24),
+                  TextFormField(
+                    controller: _roleController,
+                    decoration: InputDecoration(
+                      labelText: 'Role',
+                      prefixIcon: Icon(Icons.badge), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _courseController,
+                    decoration: InputDecoration(
+                      labelText: 'Course',
+                      prefixIcon: Icon(Icons.school), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _branchController,
+                    decoration: InputDecoration(
+                      labelText: 'Branch',
+                      prefixIcon: Icon(Icons.domain_add), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _yearOfGraduationController,
+                    decoration: InputDecoration(
+                      labelText: 'Year of Graduation',
+                      prefixIcon: Icon(Icons.event), // Added icon
+                      filled: true, // Filled text box
+                      fillColor: Colors.grey[200], // Fill color
+                    ),
+                    readOnly: true,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  if (_roleController.text != 'Mentee') ...[
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: _collegeController,
+                      decoration: InputDecoration(
+                        labelText: 'College',
+                        prefixIcon: Icon(Icons.history_edu), // Added icon
+                        filled: true, // Filled text box
+                        fillColor: Colors.grey[200], // Fill color
+                        suffixIcon: _isEditingCollege
+                            ? null
+                            : IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: _toggleEditingCollege,
+                              ),
+                      ),
+                      readOnly: false,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: _companyController,
+                      decoration: InputDecoration(
+                        labelText: 'Company',
+                        prefixIcon: Icon(Icons.business_center), // Added icon
+                        filled: true, // Filled text box
+                        fillColor: Colors.grey[200], // Fill color
+                        suffixIcon: _isEditingCollege
+                            ? null
+                            : IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: _toggleEditingCompany,
+                              ),
+                      ),
+                      readOnly: false,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ]
+                ],
+              ),
+            );
+          } else {
+            widget = const Center(
+              child: Text('Error fetching user data'),
+            );
+          }
 
           return widget;
         }),

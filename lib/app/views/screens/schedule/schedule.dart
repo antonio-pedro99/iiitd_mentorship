@@ -57,9 +57,7 @@ class _MySchedulesScreenState extends State<MySchedulesScreen> {
           await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const ScheduleMeetingScreen()
-              )
-          );
+                  builder: (context) => const ScheduleMeetingScreen()));
           setState(() {
             // Update the calendar to reflect new meetings
             _initialSelectedDate = DateTime.now();

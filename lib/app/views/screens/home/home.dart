@@ -157,7 +157,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               style:
                                   const TextStyle(fontWeight: FontWeight.w700)),
                           TextButton(
-                            onPressed: () => Navigator.pushNamed(context, "/search"),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, "/search"),
                             child: Text("See All",
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor)),
@@ -166,21 +167,30 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: getFirebaseMentors(),
-                        builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
+                        builder: (context,
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
                           if (snapshot.hasError) {
-                            return Center(child: Text('Error: ${snapshot.error}'));
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
                           }
-                          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                            return const Center(child: Text('No mentors available'));
+                          if (!snapshot.hasData ||
+                              snapshot.data!.docs.isEmpty) {
+                            return const Center(
+                                child: Text('No mentors available'));
                           }
 
                           final mentorsData = snapshot.data!;
                           final List<DBUser> mentorsList = mentorsData.docs
                               .map<DBUser>((e) => DBUser.fromJson(e.data()))
-                              .where((element) => element.uid != currentUser!.uid && element.adminApproval!)
+                              .where((element) =>
+                                  element.uid != currentUser!.uid &&
+                                  element.adminApproval!)
                               .toList();
 
                           return SizedBox(
@@ -190,16 +200,20 @@ class _MyHomePageState extends State<MyHomePage> {
                               itemCount: mentorsList.length,
                               itemBuilder: (context, index) {
                                 return SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.7,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
                                   child: InkResponse(
                                     onTap: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (context) => UserProfileScreen(user: mentorsList[index]),
+                                          builder: (context) =>
+                                              UserProfileScreen(
+                                                  user: mentorsList[index]),
                                         ),
                                       );
                                     },
-                                    child: MentorTile(mentor: mentorsList[index]),
+                                    child:
+                                        MentorTile(mentor: mentorsList[index]),
                                   ),
                                 );
                               },
@@ -221,7 +235,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               style:
                                   const TextStyle(fontWeight: FontWeight.w700)),
                           TextButton(
-                            onPressed: () => Navigator.pushNamed(context, "/search"),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, "/search"),
                             child: Text("See All",
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor)),
@@ -248,70 +263,99 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       userData.isMentor!
                           ? SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                            stream: getFirebaseSessions(),
-                            builder: (context, sessionsSnapshot) {
-                              if (sessionsSnapshot.hasData) {
-                                final sessionsData = sessionsSnapshot.data!;
-                                final sessionsList = sessionsData.docs.where((element) {
-                                  return element["userId"] == currentUser!.uid ||
-                                      (element["emailIDs"] as String).contains(currentUser!.email!);
-                                }).toList();
+                              height: MediaQuery.of(context).size.height * 0.5,
+                              child: StreamBuilder<
+                                      QuerySnapshot<Map<String, dynamic>>>(
+                                  stream: getFirebaseSessions(),
+                                  builder: (context, sessionsSnapshot) {
+                                    if (sessionsSnapshot.hasData) {
+                                      final sessionsData =
+                                          sessionsSnapshot.data!;
+                                      final sessionsList =
+                                          sessionsData.docs.where((element) {
+                                        return element["userId"] ==
+                                                currentUser!.uid ||
+                                            (element["emailIDs"] as String)
+                                                .contains(currentUser!.email!);
+                                      }).toList();
 
-                                sessionsList.sort((a, b) {
-                                  return a["from"].toDate().compareTo(b["from"].toDate());
-                                });
+                                      sessionsList.sort((a, b) {
+                                        return a["from"]
+                                            .toDate()
+                                            .compareTo(b["from"].toDate());
+                                      });
 
-                                // Check for no upcoming sessions
-                                if (sessionsList.isEmpty) {
-                                  return const Column(
-                                    mainAxisAlignment: MainAxisAlignment.start, // Aligns the text to the start of the column
-                                    children: [
-                                      SizedBox(height: 50), // Adjust this value to control the position
-                                      Center(
-                                        child: Text(
-                                          'No upcoming sessions',
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }
-
-                                return ListView.builder(
-                                  itemCount: sessionsList.length,
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    var documentSnapshot = sessionsList[index];
-                                    var meetingData = documentSnapshot.data() as Map<String, dynamic>;
-                                    String eventId = documentSnapshot.id;  // Retrieve the document ID
-                                    Meeting meeting = Meeting.fromMap(meetingData, eventId);
-
-                                    return SizedBox(
-                                      width: MediaQuery.of(context).size.width * 0.55,
-                                      height: 90,
-                                      child: Card(
-                                        elevation: 0.5,
-                                        child: ListTile(
-                                          title: Text(meeting.title, style: const TextStyle(fontWeight: FontWeight.w700)),
-                                          subtitle: Text(meeting.description, overflow: TextOverflow.ellipsis, maxLines: 2, style: const TextStyle(fontSize: 11.0, color: Colors.grey)),
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) => MeetingDetailsPage(meeting: meeting),
+                                      // Check for no upcoming sessions
+                                      if (sessionsList.isEmpty) {
+                                        return const Column(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .start, // Aligns the text to the start of the column
+                                          children: [
+                                            SizedBox(
+                                                height:
+                                                    50), // Adjust this value to control the position
+                                            Center(
+                                              child: Text(
+                                                'No upcoming sessions',
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.grey,
+                                                ),
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
+                                            ),
+                                          ],
+                                        );
+                                      }
+
+                                      return ListView.builder(
+                                        itemCount: sessionsList.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (context, index) {
+                                          var documentSnapshot =
+                                              sessionsList[index];
+                                          var meetingData = documentSnapshot
+                                              .data() as Map<String, dynamic>;
+                                          String eventId = documentSnapshot
+                                              .id; // Retrieve the document ID
+                                          Meeting meeting = Meeting.fromMap(
+                                              meetingData, eventId);
+
+                                          return SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.55,
+                                            height: 90,
+                                            child: Card(
+                                              elevation: 0.5,
+                                              child: ListTile(
+                                                title: Text(meeting.title,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700)),
+                                                subtitle: Text(
+                                                    meeting.description,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
+                                                    style: const TextStyle(
+                                                        fontSize: 11.0,
+                                                        color: Colors.grey)),
+                                                onTap: () {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MeetingDetailsPage(
+                                                              meeting: meeting),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
                                     } else if (sessionsSnapshot.hasError) {
                                       // Handle the error here
                                       return Center(
