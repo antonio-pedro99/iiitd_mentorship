@@ -87,7 +87,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SnackBar(content: Text('Profile Updated Successfully')),
           );
         } catch (e) {
-          print('Error updating user data: $e');
           // Show an error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error updating profile')),
@@ -140,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           });
         }
       } catch (e) {
-        print('Error fetching user data: $e');
+        rethrow;
       }
     }
   }
@@ -174,7 +173,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SnackBar(content: Text('Profile picture updated successfully')),
         );
       } catch (e) {
-        print('Error uploading image: $e');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error updating profile picture')),
         );
@@ -194,7 +192,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await _uploadProfileImage();
       }
     } catch (e) {
-      print('Error picking image: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error picking image')),
       );
