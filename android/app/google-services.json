@@ -14,6 +14,74 @@
       },
       "oauth_client": [
         {
+          "client_id": "1077659098219-ck6i38qrlboq52hrhlps1gemdf2gff9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.iiitd_mentorship",
+            "certificate_hash": "14b183fb2531edcfff4eed2a3afdc98c6241308b"
+          }
+        },
+        {
+          "client_id": "1077659098219-cvhe9b1hd1f6o4c85b7a06juh3gg83ht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.iiitd_mentorship",
+            "certificate_hash": "69804f3b409af5222e81be911d7c11aa272f5336"
+          }
+        },
+        {
+          "client_id": "1077659098219-hqbqi7juuiuvc19dvgjsdh3rufndq9ic.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.iiitd_mentorship",
+            "certificate_hash": "25a9aa11e2007f8795c77019a02129a2328e3cba"
+          }
+        },
+        {
+          "client_id": "1077659098219-uq2do6qijm1nem6iopk8j4l86s75uhke.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.iiitd_mentorship",
+            "certificate_hash": "e7f3bdcaeeb99066a70086c86b23301d0e2c996c"
+          }
+        },
+        {
+          "client_id": "1077659098219-uiegruhf41mgsol9ufnvqp36mp7efc2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_4qdM4mSd6v4pTTz0fWLigkN73YmuZfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1077659098219-uiegruhf41mgsol9ufnvqp36mp7efc2u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1077659098219-i14nr9otgut0t00hgnsed4kr1obf669c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.iiitdMentorship"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077659098219:android:d88595e986492d210c652e",
+        "android_client_info": {
+          "package_name": "com.example.iiitd_mentorship"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "1077659098219-uiegruhf41mgsol9ufnvqp36mp7efc2u.apps.googleusercontent.com",
           "client_type": 3
         }
