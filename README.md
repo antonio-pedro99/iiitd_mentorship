@@ -1,7 +1,7 @@
 
 # IIIT-D Alumni Mentorship Platform
 
-his project is a cutting-edge solution designed to bridge the gap between the alumni and current Indraprastha Institute of Information Technology, Delhi (IIIT-D) students. Our platform facilitates seamless interactions, allowing students to leverage the rich experience and knowledge of IIIT-D's accomplished alumni network.
+This project is a cutting-edge solution designed to bridge the gap between the alumni and current Indraprastha Institute of Information Technology, Delhi (IIIT-D) students. Our platform facilitates seamless interactions, allowing students to leverage the rich experience and knowledge of IIIT-D's accomplished alumni network.
 
 
 **Key Highlights:**
